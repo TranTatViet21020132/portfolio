@@ -5,13 +5,16 @@ import {
   Handle,
   Position,
 } from "@xyflow/react";
-import { useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import { useCallback, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipTrigger, TooltipPopup } from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
+import { useProgress } from "./App";
 
 // ============================================
-// TYPE DEFINITIONS
+// TYPES
 // ============================================
 
 export type SlideData = {
@@ -39,149 +42,283 @@ export type ProjectCardData = {
   backToHub?: string;
 };
 
+// ============================================
+// CONSTANTS & ANIMATION VARIANTS
+// ============================================
+
 export const SLIDE_WIDTH = 1920;
 export const SLIDE_HEIGHT = 1080;
 export const SLIDE_PADDING = 400;
 
+const slideVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+
+const titleVariants = {
+  hidden: { opacity: 0, y: -10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
+};
+
+const slideInLeftVariants = {
+  hidden: { opacity: 0, x: -30 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+};
+
+const slideInUpVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
+  hover: { scale: 1.02 },
+  tap: { scale: 0.98 },
+};
+
+const iconVariants = {
+  initial: { opacity: 0, scale: 0.8, rotate: -10 },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    rotate: 0,
+    transition: { duration: 0.5 },
+  },
+  hover: { scale: 1.05 },
+};
+
 // ============================================
-// SLIDE COMPONENT (Main Slide)
+// SLIDE COMPONENT
 // ============================================
 
 export function Slide({ data }: NodeProps<Node<SlideData>>) {
   const { title, content, left, up, down, right } = data;
   const { fitView } = useReactFlow();
+  const { updateProgressBySlide } = useProgress();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
 
   const moveToNextSlide = useCallback(
     (event: React.MouseEvent, nextId: string) => {
       event.stopPropagation();
-      fitView({ nodes: [{ id: nextId }], duration: 500, padding: 0.1 });
+      fitView({
+        nodes: [{ id: nextId }],
+        duration: 500,
+        padding: nextId === "03" || nextId === "04" ? 0.8 : 0.2,
+      });
+      updateProgressBySlide(nextId);
     },
-    [fitView]
+    [fitView, updateProgressBySlide]
   );
 
   return (
-    <Card className="w-full h-full bg-white shadow-2xl rounded-2xl border-2 border-gray-200 flex flex-col justify-between p-12">
-      {/* Handles for connections */}
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="top"
-        className="opacity-0"
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right"
-        className="opacity-0"
-      />
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="bottom"
-        className="opacity-0"
-      />
-      <Handle
-        type="source"
-        position={Position.Left}
-        id="left"
-        className="opacity-0"
-      />
+    <motion.div
+      ref={ref}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={slideVariants}
+      transition={{ duration: 0.6 }}
+      className="w-full h-full"
+      key={`slide-${title}`}
+    >
+      <Card className="w-full h-full bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col justify-between p-12 relative overflow-hidden">
+        {/* invisible handles */}
+        {["Top", "Right", "Bottom", "Left"].map((pos) => (
+          <Handle
+            key={`src-${pos}`}
+            type="source"
+            position={Position[pos as keyof typeof Position]}
+            id={pos.toLowerCase()}
+            className="opacity-0"
+          />
+        ))}
+        {["Top", "Right", "Bottom", "Left"].map((pos) => (
+          <Handle
+            key={`tgt-${pos}`}
+            type="target"
+            position={Position[pos as keyof typeof Position]}
+            id={pos.toLowerCase()}
+            className="opacity-0"
+          />
+        ))}
 
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="top"
-        className="opacity-0"
-      />
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="right"
-        className="opacity-0"
-      />
-      <Handle
-        type="target"
-        position={Position.Bottom}
-        id="bottom"
-        className="opacity-0"
-      />
-      <Handle
-        type="target"
-        position={Position.Left}
-        id="left"
-        className="opacity-0"
-      />
+        {/* content */}
+        <motion.div
+          className="relative z-10 space-y-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          key={`content-${title}`}
+        >
+          <motion.div variants={slideInLeftVariants}>
+            <motion.h1
+              className="text-5xl font-bold text-gray-900 mb-4"
+              variants={titleVariants}
+            >
+              {title}
+            </motion.h1>
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              style={{ originX: 0 }}
+            >
+              <Separator className="w-12 bg-gray-900" />
+            </motion.div>
+          </motion.div>
 
-      <div>
-        <h1 className="text-5xl font-bold mb-6 text-gray-900 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          {title}
-        </h1>
-        <div className="text-lg text-gray-700 leading-relaxed">{content}</div>
-      </div>
+          <motion.div
+            className="text-base text-gray-700 leading-relaxed space-y-3"
+            variants={slideInUpVariants}
+          >
+            {content}
+          </motion.div>
+        </motion.div>
 
-      <div className="flex gap-3 justify-start items-center mt-12 flex-wrap">
-        {left && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, left)}
-            variant="outline"
-            size="lg"
-            className="bg-blue-500 hover:bg-blue-600 text-white border-none"
-          >
-            ← Back
-          </Button>
-        )}
-        {up && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, up)}
-            variant="outline"
-            size="lg"
-            className="bg-purple-500 hover:bg-purple-600 text-white border-none"
-          >
-            ↑ Up
-          </Button>
-        )}
-        {down && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, down)}
-            variant="outline"
-            size="lg"
-            className="bg-green-500 hover:bg-green-600 text-white border-none"
-          >
-            ↓ Down
-          </Button>
-        )}
-        {right && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, right)}
-            variant="outline"
-            size="lg"
-            className="bg-red-500 hover:bg-red-600 text-white border-none"
-          >
-            Next →
-          </Button>
-        )}
-      </div>
-    </Card>
+        {/* navigation buttons */}
+        <motion.div
+          className="flex gap-2 justify-end items-center mt-8 flex-wrap relative z-10"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          {left && (
+            <motion.div variants={buttonVariants}>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <motion.button
+                      onClick={(e) => moveToNextSlide(e, left)}
+                      className="px-4 py-2 rounded-md border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 transition-colors"
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      ← Back
+                    </motion.button>
+                  }
+                />
+                <TooltipPopup>Go back to previous slide</TooltipPopup>
+              </Tooltip>
+            </motion.div>
+          )}
+          {up && (
+            <motion.div variants={buttonVariants}>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <motion.button
+                      onClick={(e) => moveToNextSlide(e, up)}
+                      className="px-4 py-2 rounded-md border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 transition-colors"
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      ↑ Up
+                    </motion.button>
+                  }
+                />
+                <TooltipPopup>Go up to parent slide</TooltipPopup>
+              </Tooltip>
+            </motion.div>
+          )}
+          {down && (
+            <motion.div variants={buttonVariants}>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <motion.button
+                      onClick={(e) => moveToNextSlide(e, down)}
+                      className="px-4 py-2 rounded-md border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 transition-colors"
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      ↓ Down
+                    </motion.button>
+                  }
+                />
+                <TooltipPopup>Go down to details</TooltipPopup>
+              </Tooltip>
+            </motion.div>
+          )}
+          {right && (
+            <motion.div variants={buttonVariants}>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <motion.button
+                      onClick={(e) => moveToNextSlide(e, right)}
+                      className="px-4 py-2 rounded-md bg-gray-900 text-white font-medium text-sm hover:bg-gray-800 transition-colors"
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      Next →
+                    </motion.button>
+                  }
+                />
+                <TooltipPopup>Go to next slide</TooltipPopup>
+              </Tooltip>
+            </motion.div>
+          )}
+        </motion.div>
+      </Card>
+    </motion.div>
   );
 }
 
 // ============================================
-// SKILL ICON COMPONENT (Satellite Icons)
+// SKILL ICON
 // ============================================
 
 export function SkillIcon({ data }: NodeProps<Node<SkillIconData>>) {
   const { name, iconSvg } = data;
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center justify-center border-2 border-gray-100 hover:shadow-xl transition-shadow">
-      <div className="mb-2">{iconSvg}</div>
-      <p className="text-sm font-semibold text-gray-700">{name}</p>
-    </div>
+    <motion.div
+      ref={ref}
+      initial="initial"
+      animate={isInView ? "animate" : "initial"}
+      variants={iconVariants}
+      transition={{ duration: 0.5 }}
+      key={`icon-${name}`}
+    >
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <motion.div
+              className="bg-white rounded-lg p-6 flex flex-col items-center justify-center hover:shadow-md transition-shadow border border-gray-200 cursor-pointer"
+              whileHover="hover"
+            >
+              <motion.div className="text-gray-700">{iconSvg}</motion.div>
+              {/* <motion.p className="font-medium text-gray-900 text-center text-sm">
+                {name}
+              </motion.p> */}
+            </motion.div>
+          }
+        />
+        <TooltipPopup className={"font-bold"}>{name}</TooltipPopup>
+      </Tooltip>
+    </motion.div>
   );
 }
 
 // ============================================
-// PROJECT CARD COMPONENT (Project Details)
+// PROJECT CARD
 // ============================================
 
 export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
@@ -196,115 +333,111 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
     backToHub,
   } = data;
   const { fitView } = useReactFlow();
+  const { updateProgressBySlide } = useProgress();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, amount: 0.5 });
 
   const moveToNextSlide = useCallback(
     (event: React.MouseEvent, nextId: string) => {
       event.stopPropagation();
-      fitView({ nodes: [{ id: nextId }], duration: 500, padding: 0.1 });
+      fitView({ nodes: [{ id: nextId }], duration: 500, padding: 0.2 });
+      updateProgressBySlide(nextId);
     },
-    [fitView]
+    [fitView, updateProgressBySlide]
   );
 
   return (
-    <Card className="w-full h-full bg-white shadow-2xl rounded-2xl border-2 border-gray-200 flex flex-col p-8">
-      {/* Handles */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="top"
-        className="opacity-0"
-      />
-      <Handle
-        type="target"
-        position={Position.Left}
-        id="left"
-        className="opacity-0"
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right"
-        className="opacity-0"
-      />
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="bottom"
-        className="opacity-0"
-      />
+    <motion.div
+      ref={ref}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={slideVariants}
+      transition={{ duration: 0.6 }}
+      className="w-full h-full"
+      key={`project-${title}`}
+    >
+      <Card className="w-full h-full bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col p-8 relative overflow-hidden">
+        <motion.div
+          className="flex-1 relative z-10 space-y-5"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          <motion.div
+            className="w-full h-64 bg-gray-200 rounded-lg mb-6 overflow-hidden border border-gray-300"
+            whileHover={{ scale: 1.02 }}
+          >
+            <motion.img
+              src={thumbnail}
+              alt={title}
+              className="w-full h-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            />
+          </motion.div>
+          <motion.h2 className="text-4xl font-bold text-gray-900 mb-3">
+            {title}
+          </motion.h2>
+          <Separator className="w-12 bg-gray-900" />
+          <p className="text-base text-gray-700 leading-relaxed">
+            {description}
+          </p>
 
-      <div className="flex-1">
-        {/* Thumbnail */}
-        <div className="w-full h-64 bg-gray-200 rounded-lg mb-6 overflow-hidden">
-          <img
-            src={thumbnail}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
-        </div>
+          <div className="space-y-3">
+            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              Technologies
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {technologies.map((tech) => (
+                <Badge
+                  key={tech}
+                  variant="outline"
+                  className="text-gray-700 border-gray-300 bg-gray-50"
+                >
+                  {tech}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </motion.div>
 
-        {/* Content */}
-        <h2 className="text-4xl font-bold mb-4 text-gray-900 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          {title}
-        </h2>
-        <p className="text-lg text-gray-700 mb-6">{description}</p>
-
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {technologies.map((tech) => (
-            <Badge
-              key={tech}
-              className="bg-blue-500 text-white px-3 py-1 text-sm"
+        <div className="flex gap-2 mt-6 pt-6 border-t border-gray-200">
+          {left && (
+            <motion.button
+              onClick={(e) => moveToNextSlide(e, left)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
             >
-              {tech}
-            </Badge>
-          ))}
+              ← Previous
+            </motion.button>
+          )}
+          {right && (
+            <motion.button
+              onClick={(e) => moveToNextSlide(e, right)}
+              className="px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition"
+            >
+              Next →
+            </motion.button>
+          )}
+          {up && (
+            <motion.button
+              onClick={(e) => moveToNextSlide(e, up)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+            >
+              ↑ Back
+            </motion.button>
+          )}
+          {backToHub && (
+            <motion.button
+              onClick={(e) => moveToNextSlide(e, backToHub)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+            >
+              ↑ Back to Hub
+            </motion.button>
+          )}
         </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="flex gap-3 justify-start items-center flex-wrap mt-4">
-        {left && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, left)}
-            variant="outline"
-            size="lg"
-            className="bg-blue-500 hover:bg-blue-600 text-white border-none"
-          >
-            ← Previous
-          </Button>
-        )}
-        {up && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, up)}
-            variant="outline"
-            size="lg"
-            className="bg-purple-500 hover:bg-purple-600 text-white border-none"
-          >
-            ↑ Back to Projects
-          </Button>
-        )}
-        {right && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, right)}
-            variant="outline"
-            size="lg"
-            className="bg-red-500 hover:bg-red-600 text-white border-none"
-          >
-            Next →
-          </Button>
-        )}
-        {backToHub && (
-          <Button
-            onClick={(e) => moveToNextSlide(e, backToHub)}
-            variant="outline"
-            size="lg"
-            className="bg-green-500 hover:bg-green-600 text-white border-none"
-          >
-            ↑ Back to Projects Hub
-          </Button>
-        )}
-      </div>
-    </Card>
+      </Card>
+    </motion.div>
   );
 }
