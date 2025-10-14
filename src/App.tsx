@@ -1,43 +1,79 @@
 import { useCallback, useState } from "react";
-import { ReactFlow, useReactFlow, NodeMouseHandler } from "@xyflow/react";
+import {
+  ReactFlow,
+  NodeMouseHandler,
+  Background,
+  useReactFlow,
+  ReactFlowProvider,
+} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { Slide, SkillIcon, ProjectCard } from "./Slide";
+import { nodes, edges } from "./slides";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-import { Slide } from "./Slide";
-import { slides, slidesToElements } from "./slides";
-
+// ============================================
+// NODE TYPES REGISTRATION
+// ============================================
+// Register all custom node components
 const nodeTypes = {
-  slide: Slide,
+  slide: Slide, // Main slide component
+  skillIcon: SkillIcon, // Satellite skill icons
+  projectCard: ProjectCard, // Project detail cards
 };
 
-const initialSlide = "01";
-const { nodes, edges } = slidesToElements(initialSlide, slides);
+const initialSlide = "01"; // Start at Home slide
 
-export default function App() {
+// ============================================
+// FLOW CONTENT COMPONENT
+// ============================================
+function FlowContent() {
   const [currentSlide, setCurrentSlide] = useState(initialSlide);
   const { fitView } = useReactFlow();
 
+  // Handle clicking on nodes to navigate
   const handleNodeClick = useCallback<NodeMouseHandler>(
     (_, node) => {
       if (node.id !== currentSlide) {
         setCurrentSlide(node.id);
-        fitView({ nodes: [{ id: node.id }], duration: 100 });
+        fitView({ nodes: [{ id: node.id }], duration: 500, padding: 0.1 });
       }
     },
     [fitView, currentSlide]
   );
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div className="w-screen h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <ReactFlow
         nodes={nodes}
+        edges={edges}
         nodeTypes={nodeTypes}
         nodesDraggable={false}
-        edges={edges}
+        nodesConnectable={false}
         fitView
-        fitViewOptions={{ nodes: [{ id: initialSlide }], duration: 100 }}
+        fitViewOptions={{
+          nodes: [{ id: initialSlide }],
+          duration: 500,
+          padding: 0.1,
+        }}
         minZoom={0.1}
+        maxZoom={2}
         onNodeClick={handleNodeClick}
-      />
+      >
+        <Background color="#e5e7eb" gap={16} size={1} />
+      </ReactFlow>
     </div>
+  );
+}
+
+// ============================================
+// MAIN APP COMPONENT
+// ============================================
+export default function App() {
+  return (
+    <TooltipProvider>
+      <ReactFlowProvider>
+        <FlowContent />
+      </ReactFlowProvider>
+    </TooltipProvider>
   );
 }

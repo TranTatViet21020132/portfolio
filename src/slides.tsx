@@ -1,7 +1,6 @@
 import { Edge, Node } from "@xyflow/react";
-import { SLIDE_WIDTH, SLIDE_HEIGHT, SLIDE_PADDING, SlideData } from "./Slide";
+import { SlideData, SkillIconData, ProjectCardData } from "./Slide";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -15,37 +14,51 @@ import {
   TimelineTitle,
 } from "@/components/ui/timeline";
 
-// 01: HERO
-const slide01 = {
+const SLIDE_WIDTH = 1920;
+const SLIDE_HEIGHT = 1080;
+const SLIDE_PADDING = 400;
+const ICON_DISTANCE = 600;
+
+// Helper function to calculate positions
+const getPosition = (x: number, y: number) => ({
+  x: x * (SLIDE_WIDTH + SLIDE_PADDING),
+  y: y * (SLIDE_HEIGHT + SLIDE_PADDING),
+});
+
+// Helper function to calculate icon positions in a circle
+const getIconPosition = (
+  centerX: number,
+  centerY: number,
+  index: number,
+  total: number
+) => {
+  const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
+  return {
+    x: centerX + Math.cos(angle) * ICON_DISTANCE,
+    y: centerY + Math.sin(angle) * ICON_DISTANCE,
+  };
+};
+
+// 01: HOME - Center (0, 0)
+const slide01: Node<SlideData> = {
   id: "01",
+  type: "slide",
+  position: getPosition(0, 0),
   data: {
     title: "Welcome to My Portfolio",
     content: (
       <div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "30px",
-            marginBottom: "30px",
-          }}
-        >
+        <div className="flex items-center gap-8 mb-8">
           <Avatar className="size-16">
             <AvatarImage src="https://via.placeholder.com/120" alt="Profile" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div>
-            <p
-              style={{
-                fontSize: "1.3rem",
-                marginBottom: "10px",
-                fontWeight: 600,
-              }}
-            >
+            <p className="text-xl mb-2 font-semibold">
               Full Stack Developer | Creative Problem Solver
             </p>
-            <p style={{ fontSize: "1.1rem", opacity: 0.8 }}>
-              Navigate right through my portfolio →
+            <p className="text-lg opacity-80">
+              Explore my journey through this interactive portfolio
             </p>
           </div>
         </div>
@@ -55,38 +68,32 @@ const slide01 = {
   },
 };
 
-// 02: ABOUT
-const slide02 = {
+// 02: ABOUT - Right (1, 0)
+const slide02: Node<SlideData> = {
   id: "02",
+  type: "slide",
+  position: getPosition(1, 0),
   data: {
     title: "About Me",
     content: (
       <div>
-        <div style={{ marginBottom: "30px" }}>
-          <p style={{ marginBottom: "15px", fontSize: "1.1rem" }}>
+        <div className="mb-8">
+          <p className="mb-4 text-lg">
             A passionate full-stack developer with 5+ years of experience
             building scalable web applications.
           </p>
-          <p style={{ marginBottom: "15px", fontSize: "1.1rem" }}>
+          <p className="mb-4 text-lg">
             I specialize in React, Node.js, and cloud technologies. I love
             creating elegant solutions to complex problems.
           </p>
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "20px",
-          }}
-        >
+        <div className="grid grid-cols-2 gap-5">
           <Card className="p-4 border-2 border-blue-200">
-            <p style={{ fontWeight: 600, marginBottom: "5px" }}>📍 Location</p>
+            <p className="font-semibold mb-1">📍 Location</p>
             <p>San Francisco, CA</p>
           </Card>
           <Card className="p-4 border-2 border-purple-200">
-            <p style={{ fontWeight: 600, marginBottom: "5px" }}>
-              ⚡ Experience
-            </p>
+            <p className="font-semibold mb-1">⚡ Experience</p>
             <p>5+ Years</p>
           </Card>
         </div>
@@ -97,11 +104,138 @@ const slide02 = {
   },
 };
 
-// 03: TIMELINE
-const slide03 = {
+// 03: SKILLS - Languages and Tools (2, 0)
+const slide03: Node<SlideData> = {
   id: "03",
+  type: "slide",
+  position: getPosition(2, 0),
   data: {
-    title: "My Journey",
+    title: "Languages & Tools",
+    content: (
+      <div className="text-center text-xl opacity-60">
+        Explore the technologies around this section
+      </div>
+    ),
+    left: "02",
+    right: "04",
+  },
+};
+
+// Language & Tools satellite icons
+const languageIcons = [
+  { name: "JavaScript", id: "icon-js" },
+  { name: "TypeScript", id: "icon-ts" },
+  { name: "Python", id: "icon-py" },
+  { name: "SQL", id: "icon-sql" },
+  { name: "Git", id: "icon-git" },
+  { name: "Docker", id: "icon-docker" },
+];
+
+const languageIconNodes: Node<SkillIconData>[] = languageIcons.map(
+  (icon, index) => {
+    const centerPos = getPosition(2, 0);
+    const iconPos = getIconPosition(
+      centerPos.x,
+      centerPos.y,
+      index,
+      languageIcons.length
+    );
+    return {
+      id: icon.id,
+      type: "skillIcon",
+      position: iconPos,
+      data: {
+        name: icon.name,
+        // Placeholder SVG - will be replaced with actual icons later
+        iconSvg: (
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <rect width="120" height="120" fill="#3b82f6" rx="12" />
+            <text
+              x="60"
+              y="70"
+              textAnchor="middle"
+              fill="white"
+              fontSize="48"
+              fontWeight="bold"
+            >
+              {icon.name.charAt(0)}
+            </text>
+          </svg>
+        ),
+      },
+    };
+  }
+);
+
+// 04: SKILLS - Frameworks and Libraries (3, 0)
+const slide04: Node<SlideData> = {
+  id: "04",
+  type: "slide",
+  position: getPosition(3, 0),
+  data: {
+    title: "Frameworks & Libraries",
+    content: (
+      <div className="text-center text-xl opacity-60">
+        Explore the technologies around this section
+      </div>
+    ),
+    left: "03",
+    right: "05",
+  },
+};
+
+// Frameworks & Libraries satellite icons
+const frameworkIcons = [
+  { name: "React", id: "icon-react" },
+  { name: "Next.js", id: "icon-next" },
+  { name: "Node.js", id: "icon-node" },
+  { name: "Express", id: "icon-express" },
+  { name: "Tailwind", id: "icon-tailwind" },
+  { name: "GraphQL", id: "icon-graphql" },
+];
+
+const frameworkIconNodes: Node<SkillIconData>[] = frameworkIcons.map(
+  (icon, index) => {
+    const centerPos = getPosition(3, 0);
+    const iconPos = getIconPosition(
+      centerPos.x,
+      centerPos.y,
+      index,
+      frameworkIcons.length
+    );
+    return {
+      id: icon.id,
+      type: "skillIcon",
+      position: iconPos,
+      data: {
+        name: icon.name,
+        iconSvg: (
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <rect width="120" height="120" fill="#8b5cf6" rx="12" />
+            <text
+              x="60"
+              y="70"
+              textAnchor="middle"
+              fill="white"
+              fontSize="48"
+              fontWeight="bold"
+            >
+              {icon.name.charAt(0)}
+            </text>
+          </svg>
+        ),
+      },
+    };
+  }
+);
+
+// 05: EXPERIENCE - (4, 0)
+const slide05: Node<SlideData> = {
+  id: "05",
+  type: "slide",
+  position: getPosition(4, 0),
+  data: {
+    title: "Experience",
     content: (
       <div>
         <Timeline defaultValue={3}>
@@ -144,453 +278,124 @@ const slide03 = {
         </Timeline>
       </div>
     ),
-    left: "02",
-    right: "04",
-  },
-};
-
-// 04: LANGUAGES
-const slide04 = {
-  id: "04",
-  data: {
-    title: "Languages",
-    content: (
-      <div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "40px",
-          }}
-        >
-          <div>
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                marginBottom: "20px",
-                color: "#2563eb",
-                fontWeight: 700,
-              }}
-            >
-              Primary Languages
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-            >
-              {[
-                {
-                  name: "JavaScript / TypeScript",
-                  level: 95,
-                  color: "bg-blue-500",
-                },
-                { name: "Python", level: 80, color: "bg-purple-500" },
-                { name: "SQL", level: 85, color: "bg-green-500" },
-              ].map((lang) => (
-                <Card key={lang.name} className="p-4">
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <p style={{ fontWeight: 600 }}>{lang.name}</p>
-                    <Badge className={`${lang.color}`}>{lang.level}%</Badge>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "#e5e7eb",
-                      height: "8px",
-                      borderRadius: "4px",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      className={`${lang.color}`}
-                      style={{ height: "100%", width: `${lang.level}%` }}
-                    />
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                marginBottom: "20px",
-                color: "#2563eb",
-                fontWeight: 700,
-              }}
-            >
-              Other Languages
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-            >
-              {["Go", "Java", "Rust"].map((lang) => (
-                <Card key={lang} className="p-3">
-                  <p style={{ fontWeight: 600 }}>{lang}</p>
-                  <p style={{ fontSize: "0.9rem", color: "#666" }}>
-                    {lang === "Go"
-                      ? "Intermediate"
-                      : lang === "Java"
-                      ? "Intermediate"
-                      : "Beginner"}
-                  </p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-    left: "03",
-    right: "05",
-  },
-};
-
-// 05: LIBRARIES
-const slide05 = {
-  id: "05",
-  data: {
-    title: "Libraries",
-    content: (
-      <div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "30px",
-          }}
-        >
-          <div>
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                marginBottom: "20px",
-                color: "#7c3aed",
-                fontWeight: 700,
-              }}
-            >
-              Frontend Libraries
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {[
-                "React & Hooks",
-                "React Query",
-                "Redux / Zustand",
-                "Tailwind CSS",
-                "Framer Motion",
-              ].map((lib) => (
-                <Badge
-                  key={lib}
-                  variant="secondary"
-                  className="w-fit px-3 py-2 text-sm"
-                >
-                  ✓ {lib}
-                </Badge>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                marginBottom: "20px",
-                color: "#7c3aed",
-                fontWeight: 700,
-              }}
-            >
-              Backend Libraries
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {[
-                "Express.js",
-                "NestJS",
-                "Prisma ORM",
-                "GraphQL",
-                "Socket.io",
-              ].map((lib) => (
-                <Badge
-                  key={lib}
-                  variant="secondary"
-                  className="w-fit px-3 py-2 text-sm"
-                >
-                  ✓ {lib}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
     left: "04",
     right: "06",
   },
 };
 
-// 06: FRAMEWORKS
-const slide06 = {
+// 06: PROJECTS HUB - (5, 0)
+const slide06: Node<SlideData> = {
   id: "06",
+  type: "slide",
+  position: getPosition(5, 0),
   data: {
-    title: "Frameworks",
+    title: "Projects",
     content: (
-      <div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: "20px",
-          }}
-        >
-          <Card className="p-6 border-2 border-blue-500 bg-blue-50">
-            <h3
-              style={{
-                fontSize: "1.2rem",
-                color: "#2563eb",
-                marginBottom: "15px",
-                fontWeight: 700,
-              }}
-            >
-              Web Frameworks
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {["Next.js", "React", "Vue.js", "Remix"].map((fw) => (
-                <Badge key={fw} variant="outline" className="w-fit">
-                  • {fw}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6 border-2 border-purple-500 bg-purple-50">
-            <h3
-              style={{
-                fontSize: "1.2rem",
-                color: "#7c3aed",
-                marginBottom: "15px",
-                fontWeight: 700,
-              }}
-            >
-              Backend Frameworks
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {["Express", "NestJS", "Django", "FastAPI"].map((fw) => (
-                <Badge key={fw} variant="outline" className="w-fit">
-                  • {fw}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6 border-2 border-green-500 bg-green-50">
-            <h3
-              style={{
-                fontSize: "1.2rem",
-                color: "#059669",
-                marginBottom: "15px",
-                fontWeight: 700,
-              }}
-            >
-              DevOps & Cloud
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {["Docker", "AWS", "Kubernetes", "Vercel"].map((fw) => (
-                <Badge key={fw} variant="outline" className="w-fit">
-                  • {fw}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-        </div>
+      <div className="text-center text-xl opacity-60">
+        Explore my featured projects
       </div>
     ),
     left: "05",
-    right: "07",
-  },
-};
-
-// 07: PROJECTS
-const slide07 = {
-  id: "07",
-  data: {
-    title: "Featured Projects",
-    content: (
-      <div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "25px",
-          }}
-        >
-          <Card className="p-6 border-2 border-blue-500 hover:shadow-lg transition">
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                color: "#2563eb",
-                marginBottom: "10px",
-                fontWeight: 700,
-              }}
-            >
-              E-Commerce Platform
-            </h3>
-            <p style={{ marginBottom: "15px", fontSize: "0.95rem" }}>
-              Full-stack marketplace with real-time inventory
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {["React", "Next.js", "Node.js", "PostgreSQL"].map((tech) => (
-                <Badge key={tech} className="bg-blue-500">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6 border-2 border-purple-500 hover:shadow-lg transition">
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                color: "#7c3aed",
-                marginBottom: "10px",
-                fontWeight: 700,
-              }}
-            >
-              Analytics Dashboard
-            </h3>
-            <p style={{ marginBottom: "15px", fontSize: "0.95rem" }}>
-              Data viz platform processing millions of events
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {["React", "D3.js", "GraphQL", "AWS"].map((tech) => (
-                <Badge key={tech} className="bg-purple-500">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6 border-2 border-green-500 hover:shadow-lg transition">
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                color: "#059669",
-                marginBottom: "10px",
-                fontWeight: 700,
-              }}
-            >
-              Task Management
-            </h3>
-            <p style={{ marginBottom: "15px", fontSize: "0.95rem" }}>
-              Collaborative tool with real-time updates
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {["React", "Socket.io", "MongoDB", "Express"].map((tech) => (
-                <Badge key={tech} className="bg-green-500">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6 border-2 border-red-500 hover:shadow-lg transition">
-            <h3
-              style={{
-                fontSize: "1.3rem",
-                color: "#dc2626",
-                marginBottom: "10px",
-                fontWeight: 700,
-              }}
-            >
-              Mobile App
-            </h3>
-            <p style={{ marginBottom: "15px", fontSize: "0.95rem" }}>
-              Cross-platform app with 50k+ downloads
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {["React Native", "Firebase", "TypeScript"].map((tech) => (
-                <Badge key={tech} className="bg-red-500">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </div>
-    ),
-    left: "06",
+    down: "project-01",
     right: "08",
   },
 };
 
-// 08: CONTACT
-const slide08 = {
+// PROJECT NODES - Branch from Projects Hub
+const projectNode01: Node<ProjectCardData> = {
+  id: "project-01",
+  type: "projectCard",
+  position: getPosition(5, 1),
+  data: {
+    title: "E-Commerce Platform",
+    description:
+      "Full-stack marketplace with real-time inventory management and payment processing",
+    thumbnail:
+      "https://via.placeholder.com/800x450/3b82f6/ffffff?text=E-Commerce",
+    technologies: ["React", "Next.js", "Node.js", "PostgreSQL", "Stripe"],
+    up: "06",
+    right: "project-02",
+  },
+};
+
+const projectNode02: Node<ProjectCardData> = {
+  id: "project-02",
+  type: "projectCard",
+  position: getPosition(6, 1),
+  data: {
+    title: "Analytics Dashboard",
+    description:
+      "Data visualization platform processing millions of events with real-time insights",
+    thumbnail:
+      "https://via.placeholder.com/800x450/8b5cf6/ffffff?text=Analytics",
+    technologies: ["React", "D3.js", "GraphQL", "AWS", "Redis"],
+    left: "project-01",
+    right: "project-03",
+  },
+};
+
+const projectNode03: Node<ProjectCardData> = {
+  id: "project-03",
+  type: "projectCard",
+  position: getPosition(7, 1),
+  data: {
+    title: "Task Management App",
+    description:
+      "Collaborative tool with real-time updates and team synchronization",
+    thumbnail:
+      "https://via.placeholder.com/800x450/10b981/ffffff?text=Task+Manager",
+    technologies: ["React", "Socket.io", "MongoDB", "Express"],
+    left: "project-02",
+    right: "project-04",
+  },
+};
+
+const projectNode04: Node<ProjectCardData> = {
+  id: "project-04",
+  type: "projectCard",
+  position: getPosition(8, 1),
+  data: {
+    title: "Mobile App",
+    description:
+      "Cross-platform mobile application with 50k+ downloads on app stores",
+    thumbnail:
+      "https://via.placeholder.com/800x450/ef4444/ffffff?text=Mobile+App",
+    technologies: ["React Native", "Firebase", "TypeScript"],
+    left: "project-03",
+    backToHub: "06",
+  },
+};
+
+// 08: CONTACT - (6, 0)
+const slide08: Node<SlideData> = {
   id: "08",
+  type: "slide",
+  position: getPosition(6, 0),
   data: {
     title: "Get In Touch",
     content: (
       <div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "40px",
-          }}
-        >
+        <div className="grid grid-cols-2 gap-10">
           <div>
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "25px",
-                fontWeight: 700,
-              }}
-            >
-              Contact
-            </h2>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-            >
+            <h2 className="text-2xl mb-6 font-bold">Contact</h2>
+            <div className="flex flex-col gap-5">
               {[
                 { label: "Email", value: "hello@example.com", icon: "✉️" },
                 { label: "Phone", value: "+1 (555) 123-4567", icon: "📱" },
                 { label: "Location", value: "San Francisco, CA", icon: "📍" },
               ].map((item) => (
                 <Card key={item.label} className="p-4">
-                  <p
-                    style={{
-                      fontWeight: 600,
-                      marginBottom: "8px",
-                      fontSize: "1rem",
-                    }}
-                  >
+                  <p className="font-semibold mb-2 text-base">
                     {item.icon} {item.label}
                   </p>
-                  <p style={{ fontSize: "1.05rem", fontWeight: 500 }}>
-                    {item.value}
-                  </p>
+                  <p className="text-base font-medium">{item.value}</p>
                 </Card>
               ))}
             </div>
           </div>
           <div>
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "25px",
-                fontWeight: 700,
-              }}
-            >
-              Socials
-            </h2>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-            >
+            <h2 className="text-2xl mb-6 font-bold">Socials</h2>
+            <div className="flex flex-col gap-3">
               {[
                 { label: "GitHub", url: "github.com/yourprofile", icon: "🔗" },
                 {
@@ -610,15 +415,9 @@ const slide08 = {
                   className="p-3 hover:shadow-md transition"
                 >
                   <Button variant="ghost" className="w-full justify-start">
-                    <span style={{ marginRight: "10px" }}>{social.icon}</span>
-                    <span style={{ fontWeight: 600 }}>{social.label}:</span>
-                    <span
-                      style={{
-                        marginLeft: "8px",
-                        color: "#666",
-                        fontSize: "0.9rem",
-                      }}
-                    >
+                    <span className="mr-2">{social.icon}</span>
+                    <span className="font-semibold">{social.label}:</span>
+                    <span className="ml-2 text-gray-600 text-sm">
                       {social.url}
                     </span>
                   </Button>
@@ -629,81 +428,119 @@ const slide08 = {
         </div>
       </div>
     ),
-    left: "07",
+    left: "06",
   },
 };
 
-export const slides = Object.fromEntries(
-  [slide01, slide02, slide03, slide04, slide05, slide06, slide07, slide08].map(
-    ({ id, data }) => [id, data]
-  )
-) as Record<string, SlideData>;
+// Export all nodes
+export const nodes: Node[] = [
+  slide01,
+  slide02,
+  slide03,
+  ...languageIconNodes,
+  slide04,
+  ...frameworkIconNodes,
+  slide05,
+  slide06,
+  projectNode01,
+  projectNode02,
+  projectNode03,
+  projectNode04,
+  slide08,
+];
 
-export const slidesToElements = (
-  initial: string,
-  slides: Record<string, SlideData>
-) => {
-  const stack = [{ id: initial, position: { x: 0, y: 0 } }];
-  const visited = new Set();
-  const nodes: Node<SlideData>[] = [];
-  const edges: Edge[] = [];
-
-  while (stack.length) {
-    const { id, position } = stack.pop()!;
-    const data = slides[id];
-    const node = { id, type: "slide", position, data };
-
-    if (data.left && !visited.has(data.left)) {
-      const nextPosition = {
-        x: position.x - (SLIDE_WIDTH + SLIDE_PADDING),
-        y: position.y,
-      };
-      stack.push({ id: data.left, position: nextPosition });
-      edges.push({
-        id: `${id}->${data.left}`,
-        source: id,
-        target: data.left,
-      });
-    }
-
-    if (data.up && !visited.has(data.up)) {
-      const nextPosition = {
-        x: position.x,
-        y: position.y - (SLIDE_HEIGHT + SLIDE_PADDING),
-      };
-      stack.push({ id: data.up, position: nextPosition });
-      edges.push({ id: `${id}->${data.up}`, source: id, target: data.up });
-    }
-
-    if (data.down && !visited.has(data.down)) {
-      const nextPosition = {
-        x: position.x,
-        y: position.y + (SLIDE_HEIGHT + SLIDE_PADDING),
-      };
-      stack.push({ id: data.down, position: nextPosition });
-      edges.push({
-        id: `${id}->${data.down}`,
-        source: id,
-        target: data.down,
-      });
-    }
-
-    if (data.right && !visited.has(data.right)) {
-      const nextPosition = {
-        x: position.x + (SLIDE_WIDTH + SLIDE_PADDING),
-        y: position.y,
-      };
-      stack.push({ id: data.right, position: nextPosition });
-      edges.push({
-        id: `${id}->${data.right}`,
-        source: id,
-        target: data.right,
-      });
-    }
-
-    nodes.push(node);
-    visited.add(id);
-  }
-
-  return { nodes, edges };
-};
+// Define edges for the main flow
+export const edges: Edge[] = [
+  // Main flow: Home -> About -> Skills -> Experience -> Projects -> Contact
+  {
+    id: "01->02",
+    source: "01",
+    target: "02",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "02->03",
+    source: "02",
+    target: "03",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "03->04",
+    source: "03",
+    target: "04",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "04->05",
+    source: "04",
+    target: "05",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "05->06",
+    source: "05",
+    target: "06",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "06->08",
+    source: "06",
+    target: "08",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  // Projects branch
+  {
+    id: "06->project-01",
+    source: "06",
+    target: "project-01",
+    sourceHandle: "bottom",
+    targetHandle: "top",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "project-01->project-02",
+    source: "project-01",
+    target: "project-02",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "project-02->project-03",
+    source: "project-02",
+    target: "project-03",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+  {
+    id: "project-03->project-04",
+    source: "project-03",
+    target: "project-04",
+    sourceHandle: "right",
+    targetHandle: "left",
+    animated: true,
+    style: { stroke: "#94a3b8", strokeWidth: 2 },
+  },
+];
