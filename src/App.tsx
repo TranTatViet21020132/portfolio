@@ -19,10 +19,6 @@ import { Progress } from "@/components/ui/progress";
 import { Slide, SkillIcon, ProjectCard } from "./Slide";
 import { nodes, edges } from "./slides";
 
-// ============================================
-// PROGRESS CONTEXT
-// ============================================
-
 type ProgressContextType = {
   progress: number;
   setProgress: (value: number) => void;
@@ -39,18 +35,21 @@ export const useProgress = () => {
 };
 
 const ProgressProvider = ({ children }: { children: React.ReactNode }) => {
-  const [progress, setProgress] = useState(100 / 8);
-  const mainSlides = useMemo(() => {
-    return ["01", "02", "03", "04", "05", "06", "07", "08"];
-  }, []);
+  const [progress, setProgress] = useState(0);
+
+  const mainSlides = useMemo(
+    () => ["01", "02", "03", "04", "05", "06", "07"],
+    []
+  );
 
   const updateProgressBySlide = useCallback(
     (slideId: string) => {
       const idx = mainSlides.indexOf(slideId);
-      if (idx !== -1) {
-        const p = ((idx + 1) / mainSlides.length) * 100;
-        setProgress(p);
-      }
+      const totalGaps = mainSlides.length - 1;
+
+      const p = (idx / totalGaps) * 100;
+
+      setProgress(p);
     },
     [mainSlides]
   );
@@ -64,10 +63,6 @@ const ProgressProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// ============================================
-// NODE TYPES REGISTRATION
-// ============================================
-
 const nodeTypes = {
   slide: Slide,
   skillIcon: SkillIcon,
@@ -75,10 +70,6 @@ const nodeTypes = {
 };
 
 const initialSlide = "01";
-
-// ============================================
-// LOADING SCREEN
-// ============================================
 
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -108,7 +99,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -116,7 +107,12 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="flex flex-col items-center gap-8"
       >
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center shadow-lg">
+        <div
+          className="w-20 h-20 rounded-full flex items-center justify-center shadow-lg"
+          style={{
+            background: "linear-gradient(to bottom right, #ba094a, #e90b5d)",
+          }}
+        >
           <motion.div
             animate={{
               scale: [1, 0.8, 1],
@@ -127,22 +123,30 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         </div>
 
         <div className="text-center space-y-3">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold" style={{ color: "#5d0425" }}>
             Loading Portfolio
           </h2>
-          <p className="text-sm text-gray-600">Preparing your experience...</p>
+          <p className="text-sm" style={{ color: "#ba094a" }}>
+            Preparing your experience...
+          </p>
         </div>
 
         <div className="w-64">
-          <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div
+            className="relative h-2 rounded-full overflow-hidden"
+          >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-gray-900 rounded-full"
+              className="absolute inset-0 rounded-full"
+              style={{
+                background:
+                  "linear-gradient(to right, #ba094a, #e90b5d, #8c0738)",
+              }}
               initial={{ x: "-100%" }}
               animate={{ x: `${loadingProgress - 100}%` }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </div>
-          <p className="text-xs text-gray-500 text-center mt-2">
+          <p className="text-xs text-center mt-2" style={{ color: "#e90b5d" }}>
             {Math.round(loadingProgress)}%
           </p>
         </div>
@@ -150,10 +154,6 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     </motion.div>
   );
 }
-
-// ============================================
-// GLOBAL PROGRESS BAR
-// ============================================
 
 function ScrollProgress() {
   const { progress } = useProgress();
@@ -165,10 +165,6 @@ function ScrollProgress() {
     />
   );
 }
-
-// ============================================
-// FLOW CONTENT
-// ============================================
 
 function FlowContent() {
   return (
@@ -195,10 +191,6 @@ function FlowContent() {
     </div>
   );
 }
-
-// ============================================
-// MAIN APP
-// ============================================
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);

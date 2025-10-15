@@ -57,6 +57,42 @@ body,
   --color-info-foreground: var(--info-foreground);
   --color-info: var(--info);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  /* LG Brand Colors - Updated with e90b5d as primary */
+  --color-lg-50:  #fef1f7;
+  --color-lg-100: #fdd7e8;
+  --color-lg-200: #fcb0d1;
+  --color-lg-300: #fa88ba;
+  --color-lg-400: #f961a3;
+  --color-lg-500: #e90b5d;
+  --color-lg-600: #ba094a;
+  --color-lg-700: #8c0738;
+  --color-lg-800: #5d0425;
+  --color-lg-900: #2f0213;
+
+  /* Keep standard gray scale for most UI elements */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Keep standard slate scale for backgrounds */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
 }
 
 :root {
@@ -67,7 +103,7 @@ body,
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: var(--color-lg-500);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -78,7 +114,7 @@ body,
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: var(--color-lg-500);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -91,7 +127,7 @@ body,
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: var(--color-lg-500);
   --destructive-foreground: oklch(0.505 0.213 27.518);
   --info: oklch(0.623 0.214 259.815);
   --info-foreground: oklch(0.488 0.243 264.376);
@@ -108,7 +144,7 @@ body,
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
+  --primary: var(--color-lg-400);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -174,5 +210,19 @@ body,
 
   .slide__controls button {
     font-size: 2rem;
+  }
+
+  /* Apply LG brand colors to specific heading and separator elements */
+  h1.text-5xl,
+  h1.text-4xl,
+  h2.text-4xl,
+  h2.text-2xl {
+    color: var(--color-lg-700) !important;
+  }
+
+  /* Target separators specifically */
+  .w-12.bg-gray-900,
+  hr.bg-gray-900 {
+    background-color: var(--color-lg-500) !important;
   }
 }

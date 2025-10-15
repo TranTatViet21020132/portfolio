@@ -32,6 +32,7 @@ import TanstackQueryIcon from "@/assets/icons/tanstack-query.svg?react";
 import TypeScriptIcon from "@/assets/icons/typescript.svg?react";
 import ViteIcon from "@/assets/icons/vite.svg?react";
 import WebpackIcon from "@/assets/icons/webpack.svg?react";
+import { ArrowRight, FolderGit2, Github, Linkedin, Mail, Phone, Sparkles, Users } from "lucide-react";
 
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
@@ -113,6 +114,19 @@ const gridItemVariant: Variants = {
   },
 };
 
+const counterVariant: Variants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 15,
+    },
+  },
+};
+
 // 01: HOME
 const slide01: Node<SlideData> = {
   id: "01",
@@ -144,12 +158,9 @@ const slide01: Node<SlideData> = {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Avatar className="size-28 border-2 border-gray-200 shadow-sm">
-              <AvatarImage
-                src="https://via.placeholder.com/120"
-                alt="Profile"
-              />
+              <AvatarImage src="src\assets\images\Avatar.jpg" alt="Profile" />
               <AvatarFallback className="bg-gray-100 text-gray-900 text-2xl font-semibold">
-                JD
+                TV
               </AvatarFallback>
             </Avatar>
 
@@ -170,22 +181,23 @@ const slide01: Node<SlideData> = {
                 className="text-4xl font-extrabold text-gray-900 leading-tight tracking-tight"
                 variants={textSlideVariant}
               >
-                Full Stack Developer
+                Frontend Developer
               </motion.h2>
               <motion.p
                 className="text-xl font-medium text-gray-600"
                 variants={textSlideVariant}
                 transition={{ delay: 0.2 }}
               >
-                Creative Problem Solver
+                Building High-Performance Web Applications
               </motion.p>
               <motion.p
                 className="text-gray-500 text-base leading-relaxed max-w-md"
                 variants={textSlideVariant}
                 transition={{ delay: 0.4 }}
               >
-                Explore my journey through this interactive portfolio and get to
-                know my work, skills, and experiences.
+                Explore my journey through this interactive portfolio and
+                discover how I transform complex requirements into intuitive,
+                scalable user interfaces.
               </motion.p>
             </motion.div>
           </motion.div>
@@ -205,7 +217,11 @@ const slide01: Node<SlideData> = {
               },
             }}
           >
-            {["React & Next.js", "Full Stack", "Cloud Native"].map((skill) => (
+            {[
+              "React & React Hooks",
+              "Data Visualization",
+              "State Management",
+            ].map((skill) => (
               <motion.div
                 key={skill}
                 variants={{
@@ -271,11 +287,11 @@ const slide02: Node<SlideData> = {
             >
               I'm a{" "}
               <span className="font-semibold text-gray-900">
-                passionate full-stack developer
+                passionate frontend developer
               </span>{" "}
-              with over 5 years of experience building scalable,
-              high-performance web applications that serve millions of users
-              worldwide.
+              with 2 years of experience specializing in building
+              high-performance, data-intensive web applications that serve real
+              business needs.
             </motion.p>
 
             <motion.p
@@ -283,12 +299,14 @@ const slide02: Node<SlideData> = {
               variants={textSlideVariant}
               transition={{ delay: 0.2 }}
             >
-              I specialize in{" "}
+              I focus on transforming{" "}
               <span className="font-medium text-gray-900">
-                React, Node.js, and cloud technologies
+                complex requirements into intuitive, visually compelling user
+                interfaces
               </span>{" "}
-              — crafting elegant solutions to complex problems while mentoring
-              junior developers to reach their full potential.
+              — from large-scale data visualizations to intricate state
+              management architectures, ensuring scalability and excellent user
+              experiences.
             </motion.p>
           </motion.div>
 
@@ -308,9 +326,9 @@ const slide02: Node<SlideData> = {
             }}
           >
             {[
-              { label: "LOCATION", value: "San Francisco, CA" },
-              { label: "EXPERIENCE", value: "5+ Years" },
-              { label: "PROJECTS", value: "50+" },
+              { label: "LOCATION", value: "Hanoi, Vietnam" },
+              { label: "EXPERIENCE", value: "2 Years" },
+              { label: "EDUCATION", value: "VNU-UET" },
             ].map((item) => (
               <motion.div
                 key={item.label}
@@ -338,9 +356,6 @@ const slide02: Node<SlideData> = {
   },
 };
 
-// ============================================
-// 03: SKILLS - Languages and Tools
-// ============================================
 const slide03: Node<SlideData> = {
   id: "03",
   type: "slide",
@@ -397,7 +412,7 @@ const slide03: Node<SlideData> = {
                 className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
               >
                 <motion.div
-                  className="w-1.5 h-1.5 rounded-full bg-gray-900 group-hover:bg-gray-700"
+                  className="w-1.5 h-1.5 rounded-full bg-lg-700 group-hover:bg-lg-500"
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{
                     duration: 2.5,
@@ -441,15 +456,12 @@ const languageIconNodes: Node<SkillIconData>[] = languageIcons.map(
       position: iconPos,
       data: {
         name: icon.name,
-        iconSvg: <icon.Icon className="w-16 h-16 text-gray-700" />,
+        iconSvg: <icon.Icon className="w-20 h-20 text-gray-700" />,
       },
     };
   }
 );
 
-// ============================================
-// 04: SKILLS - Frameworks and Libraries
-// ============================================
 const slide04: Node<SlideData> = {
   id: "04",
   type: "slide",
@@ -493,22 +505,22 @@ const slide04: Node<SlideData> = {
           >
             <Tabs defaultValue="frontend" className="w-full">
               <ScrollArea>
-                <TabsList className="mb-4 gap-1 bg-transparent">
+                <TabsList className="mb-4 gap-1 bg-transparent w-full">
                   <TabsTrigger
                     value="frontend"
-                    className="rounded-full data-[state=active]:bg-gray-900 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
+                    className="rounded-full data-[state=active]:bg-lg-500 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     Frontend
                   </TabsTrigger>
                   <TabsTrigger
                     value="state"
-                    className="rounded-full data-[state=active]:bg-gray-900 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
+                    className="rounded-full data-[state=active]:bg-lg-500 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     State & Data
                   </TabsTrigger>
                   <TabsTrigger
                     value="build"
-                    className="rounded-full data-[state=active]:bg-gray-900 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
+                    className="rounded-full data-[state=active]:bg-lg-500 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     Build Tools
                   </TabsTrigger>
@@ -528,34 +540,39 @@ const slide04: Node<SlideData> = {
                       hidden: { opacity: 0 },
                       visible: {
                         opacity: 1,
-                        transition: { delayChildren: 0.1, staggerChildren: 0.1 },
+                        transition: {
+                          delayChildren: 0.1,
+                          staggerChildren: 0.1,
+                        },
                       },
                     }}
                     initial="hidden"
                     animate="visible"
                   >
-                    {["React", "Next.js", "Tailwind CSS", "Sass"].map((t, idx) => (
-                      <motion.div
-                        key={t}
-                        variants={gridItemVariant}
-                        whileHover={{
-                          x: 8,
-                          transition: { duration: 0.2 },
-                        }}
-                        className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
-                      >
+                    {["React", "Next.js", "Tailwind CSS", "Sass"].map(
+                      (t, idx) => (
                         <motion.div
-                          className="w-1.5 h-1.5 rounded-full bg-gray-900 group-hover:bg-gray-700"
-                          animate={{ scale: [1, 1.3, 1] }}
-                          transition={{
-                            duration: 2.5,
-                            delay: idx * 0.15,
-                            repeat: Infinity,
+                          key={t}
+                          variants={gridItemVariant}
+                          whileHover={{
+                            x: 8,
+                            transition: { duration: 0.2 },
                           }}
-                        />
-                        <span className="text-gray-900 font-medium">{t}</span>
-                      </motion.div>
-                    ))}
+                          className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
+                        >
+                          <motion.div
+                            className="w-1.5 h-1.5 rounded-full bg-lg-700 group-hover:bg-lg-500"
+                            animate={{ scale: [1, 1.3, 1] }}
+                            transition={{
+                              duration: 2.5,
+                              delay: idx * 0.15,
+                              repeat: Infinity,
+                            }}
+                          />
+                          <span className="text-gray-900 font-medium">{t}</span>
+                        </motion.div>
+                      )
+                    )}
                   </motion.div>
                 </TabsContent>
 
@@ -566,7 +583,10 @@ const slide04: Node<SlideData> = {
                       hidden: { opacity: 0 },
                       visible: {
                         opacity: 1,
-                        transition: { delayChildren: 0.1, staggerChildren: 0.1 },
+                        transition: {
+                          delayChildren: 0.1,
+                          staggerChildren: 0.1,
+                        },
                       },
                     }}
                     initial="hidden"
@@ -604,7 +624,10 @@ const slide04: Node<SlideData> = {
                       hidden: { opacity: 0 },
                       visible: {
                         opacity: 1,
-                        transition: { delayChildren: 0.1, staggerChildren: 0.1 },
+                        transition: {
+                          delayChildren: 0.1,
+                          staggerChildren: 0.1,
+                        },
                       },
                     }}
                     initial="hidden"
@@ -691,48 +714,53 @@ const slide05: Node<SlideData> = {
             <TimelineHeader>
               <TimelineSeparator />
               <TimelineDate className="text-gray-600 font-medium">
-                2019 - 2021
+                Apr 2024 - Jul 2024
               </TimelineDate>
               <TimelineTitle className="text-lg font-semibold text-gray-900">
-                Junior Developer
+                Web Development Trainee
               </TimelineTitle>
               <TimelineIndicator className="bg-gray-400" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600">
-              Started my career building web applications and learning best
-              practices in software development. Worked with React and Node.js.
+            <TimelineContent className="text-gray-600 text-base">
+              Viettel Digital Talent Program trainee. Learned web development
+              fundamentals including Front-End, Back-End, Database, Web
+              Optimization, and Security. Collaborated on final assessment
+              project.
             </TimelineContent>
           </TimelineItem>
           <TimelineItem step={2}>
             <TimelineHeader>
               <TimelineSeparator />
               <TimelineDate className="text-gray-600 font-medium">
-                2021 - 2023
+                Jul 2024 - Oct 2024
               </TimelineDate>
               <TimelineTitle className="text-lg font-semibold text-gray-900">
-                Full Stack Developer
+                Frontend Intern
               </TimelineTitle>
               <TimelineIndicator className="bg-gray-400" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600">
-              Built and maintained multiple production applications serving
-              millions of users across different platforms and regions.
+            <TimelineContent className="text-gray-600 text-base">
+              At FPT IS, built pages and components from Figma designs,
+              integrated APIs, and developed features based on client requests.
+              Worked on IWM, CRM, and e-Procurement projects.
             </TimelineContent>
           </TimelineItem>
           <TimelineItem step={3}>
             <TimelineHeader>
               <TimelineSeparator />
               <TimelineDate className="text-gray-600 font-medium">
-                2023 - Present
+                Jan 2025 - Present
               </TimelineDate>
               <TimelineTitle className="text-lg font-semibold text-gray-900">
-                Senior Developer
+                Frontend Developer
               </TimelineTitle>
               <TimelineIndicator className="bg-gray-400" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600">
-              Leading frontend architecture, mentoring junior developers, and
-              driving technical innovation across the organization.
+            <TimelineContent className="text-gray-600 text-base">
+              At FPT Software, transforming requirements into creative UIs.
+              Optimizing large-scale data rendering with React Flow, processing
+              millions of Excel rows, and managing complex state interactions.
+              Collaborating with backend to ensure system scalability.
             </TimelineContent>
           </TimelineItem>
         </Timeline>
@@ -751,40 +779,173 @@ const slide06: Node<SlideData> = {
   data: {
     title: "Featured Projects",
     content: (
-      <div className="space-y-6">
-        <p className="text-gray-700">Explore my recent work and achievements</p>
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="p-4 border-gray-200 bg-gray-50">
-            <p className="text-sm font-semibold text-gray-600">
-              TOTAL PROJECTS
-            </p>
-            <p className="text-2xl font-bold text-gray-900 mt-2">20+</p>
-          </Card>
-          <Card className="p-4 border-gray-200 bg-gray-50">
-            <p className="text-sm font-semibold text-gray-600">USERS SERVED</p>
-            <p className="text-2xl font-bold text-gray-900 mt-2">5M+</p>
-          </Card>
-        </div>
-      </div>
+      <motion.div
+        className="space-y-10 max-w-4xl mx-auto p-8"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { delayChildren: 0.1, staggerChildren: 0.12 },
+          },
+        }}
+      >
+        {/* Header Section */}
+        <motion.div
+          className="space-y-6"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { delayChildren: 0.15, staggerChildren: 0.1 },
+            },
+          }}
+        >
+          <motion.div
+            className="flex items-center gap-3"
+            variants={textSlideVariant}
+          >
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-6 h-6 text-gray-600" />
+            </motion.div>
+            <h3 className="text-xl text-gray-600 font-light">
+              A showcase of my work
+            </h3>
+          </motion.div>
+
+          <motion.p
+            className="text-lg text-gray-700 leading-relaxed max-w-2xl"
+            variants={textSlideVariant}
+          >
+            From real-time chat systems with encryption to task management tools
+            and mobile applications — here are projects that highlight my
+            expertise in full-stack development and front-end leadership.
+          </motion.p>
+
+          <Separator className="bg-gray-200 w-1/4" />
+        </motion.div>
+
+        {/* Stats Grid */}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { delayChildren: 0.3, staggerChildren: 0.15 },
+            },
+          }}
+        >
+          {[
+            {
+              icon: FolderGit2,
+              label: "TOTAL PROJECTS",
+              value: "20+",
+              description: "Completed & Deployed",
+              color: "text-gray-700",
+            },
+            {
+              icon: Users,
+              label: "TEAM EXPERIENCE",
+              value: "4+ members",
+              description: "Worked in collaborative teams",
+              color: "text-gray-700",
+            },
+          ].map((stat, idx) => (
+            <motion.div key={stat.label} variants={gridItemVariant}>
+              <Card className="relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                <motion.div
+                  className="absolute -right-8 -top-8 w-32 h-32 bg-gray-100 rounded-full opacity-20 group-hover:opacity-30 transition-opacity"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 4,
+                    delay: idx * 0.5,
+                    repeat: Infinity,
+                  }}
+                />
+
+                <div className="relative space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                        {stat.label}
+                      </p>
+                      <motion.p
+                        className="text-4xl font-bold text-gray-900"
+                        variants={counterVariant}
+                      >
+                        {stat.value}
+                      </motion.p>
+                    </div>
+                    <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <motion.div
+                      className="w-1 h-1 rounded-full bg-gray-600"
+                      animate={{ scale: [1, 1.5, 1] }}
+                      transition={{
+                        duration: 2,
+                        delay: idx * 0.3,
+                        repeat: Infinity,
+                      }}
+                    />
+                    {stat.description}
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Navigation Hint */}
+        <motion.div
+          className="flex items-center justify-center gap-3 text-gray-500 pt-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
+          <span className="text-sm font-medium">Explore projects</span>
+          <motion.div
+            animate={{ x: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <ArrowRight className="w-4 h-4" />
+          </motion.div>
+        </motion.div>
+      </motion.div>
     ),
     up: "05",
     right: "project-01",
-    down: "08",
+    down: "07",
   },
 };
 
-// PROJECT NODES - Now arranged horizontally to the right
+// PROJECT NODES
 const projectNode01: Node<ProjectCardData> = {
   id: "project-01",
   type: "projectCard",
   position: getPosition(1, 5),
   data: {
-    title: "E-Commerce Platform",
+    title: "EE2E Chat",
     description:
-      "Full-stack marketplace with real-time inventory management, payment processing, and advanced analytics dashboard.",
+      "A real-time chat web app featuring E2EE messaging, file sharing, group chats, and encrypted audio/video calls.",
     thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=E-Commerce",
-    technologies: ["React", "Next.js", "Node.js", "PostgreSQL", "Stripe"],
+      "https://via.placeholder.com/800x450/e5e7eb/374151?text=EE2E+Chat",
+    technologies: [
+      "React",
+      "Tailwind",
+      "Shadcn/ui",
+      "Zustand",
+      "libsodium-wrappers",
+    ],
+    github: "https://github.com/TranTatViet21020132/EE2EChat",
     left: "06",
     right: "project-02",
   },
@@ -795,12 +956,20 @@ const projectNode02: Node<ProjectCardData> = {
   type: "projectCard",
   position: getPosition(2, 5),
   data: {
-    title: "Analytics Dashboard",
+    title: "MB Chat",
     description:
-      "Data visualization platform processing millions of real-time events with interactive charts and insights.",
+      "A React Native chat mobile app enabling users to send messages, files, and images, with WebRTC-based audio and video calls.",
     thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=Analytics",
-    technologies: ["React", "D3.js", "GraphQL", "AWS", "Redis"],
+      "https://via.placeholder.com/800x450/e5e7eb/374151?text=MB+Chat",
+    technologies: [
+      "React Native",
+      "TypeScript",
+      "Redux",
+      "WebSocket",
+      "WebRTC",
+      "Expo",
+    ],
+    github: "https://github.com/TranTatViet21020132/MBChat",
     left: "project-01",
     right: "project-03",
   },
@@ -811,94 +980,238 @@ const projectNode03: Node<ProjectCardData> = {
   type: "projectCard",
   position: getPosition(3, 5),
   data: {
-    title: "Task Management App",
+    title: "Tasktify",
     description:
-      "Collaborative tool with real-time updates, team synchronization, and intelligent task prioritization.",
+      "A simple task management system featuring analytics and Drag & Drop for intuitive task organization.",
     thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=Task+Manager",
-    technologies: ["React", "Socket.io", "MongoDB", "Express"],
+      "https://via.placeholder.com/800x450/e5e7eb/374151?text=Tasktify",
+    technologies: [
+      "React",
+      "Tailwind",
+      "Zustand",
+      "React Query",
+      "Shadcn/ui",
+      "TypeScript",
+      "DnD Kit",
+      "ThreeJS",
+    ],
+    github: "https://github.com/TranTatViet21020132/tasktify",
     left: "project-02",
-    right: "project-04",
-  },
-};
-
-const projectNode04: Node<ProjectCardData> = {
-  id: "project-04",
-  type: "projectCard",
-  position: getPosition(4, 5),
-  data: {
-    title: "Mobile App",
-    description:
-      "Cross-platform mobile application with 50k+ downloads on app stores and 4.8 star rating.",
-    thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=Mobile+App",
-    technologies: ["React Native", "Firebase", "TypeScript"],
-    left: "project-03",
     backToHub: "06",
   },
 };
 
-// 08: CONTACT
-const slide08: Node<SlideData> = {
-  id: "08",
+
+// 07: CONTACT
+const slide07: Node<SlideData> = {
+  id: "07",
   type: "slide",
   position: getPosition(0, 6),
   data: {
-    title: "Get In Touch",
+    title: "Let's Connect",
     content: (
-      <div className="space-y-6">
-        <Tabs defaultValue="contact" className="w-full">
-          <ScrollArea>
-            <TabsList className="mb-3 gap-1 bg-transparent">
-              <TabsTrigger
-                value="contact"
-                className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-              >
-                Contact Info
-              </TabsTrigger>
-              <TabsTrigger
-                value="socials"
-                className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-              >
-                Social Links
-              </TabsTrigger>
-            </TabsList>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-          <TabsContent value="contact" className="space-y-3 mt-4">
-            {[
-              { label: "Email", value: "hello@example.com" },
-              { label: "Phone", value: "+1 (555) 123-4567" },
-              { label: "Location", value: "San Francisco, CA" },
-            ].map((item) => (
-              <Card key={item.label} className="p-4 border-gray-200 bg-gray-50">
-                <p className="text-sm font-semibold text-gray-600">
-                  {item.label.toUpperCase()}
-                </p>
-                <p className="text-gray-900 mt-2 font-medium">{item.value}</p>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="slide-07"
+          className="max-w-4xl mx-auto space-y-12 p-8"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { delayChildren: 0.1, staggerChildren: 0.1 },
+            },
+          }}
+        >
+          {/* Header Section */}
+          <motion.div
+            className="space-y-4 text-center"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+          >
+            <motion.h3
+              className="text-3xl font-bold text-gray-900"
+              variants={textSlideVariant}
+            >
+              Get In Touch
+            </motion.h3>
+            <motion.p
+              className="text-gray-600 text-lg max-w-xl mx-auto"
+              variants={textSlideVariant}
+            >
+              Feel free to reach out for collaborations, opportunities, or just
+              to say hello!
+            </motion.p>
+            <Separator className="bg-gray-200 w-1/4 mx-auto" />
+          </motion.div>
+
+          {/* Contact Cards Grid */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { delayChildren: 0.2, staggerChildren: 0.12 },
+              },
+            }}
+          >
+            {/* Email Card */}
+            <motion.div variants={gridItemVariant}>
+              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
+                <motion.div
+                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                  }}
+                />
+                <div className="relative space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Mail className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                      Email
+                    </span>
+                  </div>
+                  <p className="text-lg font-semibold text-gray-900 break-all pl-1">
+                    trantatviet2003@gmail.com
+                  </p>
+                </div>
               </Card>
-            ))}
-          </TabsContent>
-          <TabsContent value="socials" className="space-y-3 mt-4">
-            {[
-              { label: "GitHub", url: "github.com/yourprofile" },
-              { label: "LinkedIn", url: "linkedin.com/in/yourprofile" },
-              { label: "Twitter", url: "twitter.com/yourprofile" },
-              { label: "Website", url: "yourportfolio.com" },
-            ].map((social) => (
-              <Card
-                key={social.label}
-                className="p-4 border-gray-200 bg-gray-50"
-              >
-                <p className="text-sm font-semibold text-gray-600">
-                  {social.label.toUpperCase()}
-                </p>
-                <p className="text-gray-700 mt-2">{social.url}</p>
+            </motion.div>
+
+            {/* LinkedIn Card */}
+            <motion.div variants={gridItemVariant}>
+              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
+                <motion.div
+                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    delay: 0.5,
+                    repeat: Infinity,
+                  }}
+                />
+                <div className="relative space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Linkedin className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                      LinkedIn
+                    </span>
+                  </div>
+                  <p className="text-lg font-semibold text-gray-900 pl-1">
+                    Trần Tất Việt
+                  </p>
+                  <p className="text-sm text-gray-600 pl-1">
+                    linkedin.com/in/trần-tất-việt-bab402319
+                  </p>
+                </div>
               </Card>
-            ))}
-          </TabsContent>
-        </Tabs>
-      </div>
+            </motion.div>
+
+            {/* GitHub Card */}
+            <motion.div variants={gridItemVariant}>
+              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
+                <motion.div
+                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    delay: 1,
+                    repeat: Infinity,
+                  }}
+                />
+                <div className="relative space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Github className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                      GitHub
+                    </span>
+                  </div>
+                  <p className="text-lg font-semibold text-gray-900 pl-1">
+                    TranTatViet21020132
+                  </p>
+                  <p className="text-sm text-gray-600 pl-1">
+                    github.com/TranTatViet21020132
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Location Card */}
+            <motion.div variants={gridItemVariant}>
+              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
+                <motion.div
+                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    delay: 1.5,
+                    repeat: Infinity,
+                  }}
+                />
+                <div className="relative space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Phone className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                      Phone number
+                    </span>
+                  </div>
+                  <p className="text-lg font-semibold text-gray-900 pl-1">
+                    (+84) 97-9235-038
+                  </p>
+                  <p className="text-sm text-gray-600 pl-1">
+                    Open to remote opportunities
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+          </motion.div>
+
+          {/* CTA Section */}
+          <motion.div
+            className="text-center space-y-4 pt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <motion.div
+              className="inline-flex items-center gap-2 text-gray-600"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <motion.div
+                className="w-2 h-2 rounded-full bg-green-500"
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <span className="text-sm font-medium">
+                Available for new opportunities
+              </span>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
     ),
     up: "06",
   },
@@ -916,8 +1229,7 @@ export const nodes: Node[] = [
   projectNode01,
   projectNode02,
   projectNode03,
-  projectNode04,
-  slide08,
+  slide07,
 ];
 
 export const edges: Edge[] = [
@@ -967,9 +1279,9 @@ export const edges: Edge[] = [
     style: { stroke: "#d1d5db", strokeWidth: 3 },
   },
   {
-    id: "06->08",
+    id: "06->07",
     source: "06",
-    target: "08",
+    target: "07",
     sourceHandle: "bottom",
     targetHandle: "top",
     animated: true,

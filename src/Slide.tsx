@@ -5,17 +5,13 @@ import {
   Handle,
   Position,
 } from "@xyflow/react";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipPopup } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 import { useProgress } from "./App";
-
-// ============================================
-// TYPES
-// ============================================
 
 export type SlideData = {
   title: string;
@@ -40,11 +36,8 @@ export type ProjectCardData = {
   right?: string;
   up?: string;
   backToHub?: string;
+  github?: string;
 };
-
-// ============================================
-// CONSTANTS & ANIMATION VARIANTS
-// ============================================
 
 export const SLIDE_WIDTH = 1920;
 export const SLIDE_HEIGHT = 1080;
@@ -100,10 +93,6 @@ const iconVariants = {
   },
   hover: { scale: 1.05 },
 };
-
-// ============================================
-// SLIDE COMPONENT
-// ============================================
 
 export function Slide({ data }: NodeProps<Node<SlideData>>) {
   const { title, content, left, up, down, right } = data;
@@ -261,7 +250,7 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
                   render={
                     <motion.button
                       onClick={(e) => moveToNextSlide(e, right)}
-                      className="px-4 py-2 rounded-md bg-gray-900 text-white font-medium text-sm hover:bg-gray-800 transition-colors"
+                      className="px-4 py-2 rounded-md bg-lg-600 text-white font-medium text-sm hover:bg-lg-500 transition-colors"
                       whileHover="hover"
                       whileTap="tap"
                     >
@@ -278,10 +267,6 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
     </motion.div>
   );
 }
-
-// ============================================
-// SKILL ICON
-// ============================================
 
 export function SkillIcon({ data }: NodeProps<Node<SkillIconData>>) {
   const { name, iconSvg } = data;
@@ -317,10 +302,6 @@ export function SkillIcon({ data }: NodeProps<Node<SkillIconData>>) {
   );
 }
 
-// ============================================
-// PROJECT CARD
-// ============================================
-
 export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
   const {
     title,
@@ -335,7 +316,31 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
   const { fitView } = useReactFlow();
   const { updateProgressBySlide } = useProgress();
   const ref = useRef(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: false, amount: 0.5 });
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageRef.current) return;
+
+    const rect = imageRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Calculate distance from center, with stronger effect
+    const deltaX = (e.clientX - centerX) / rect.width;
+    const deltaY = (e.clientY - centerY) / rect.height;
+
+    setMousePosition({ x: deltaX * 25, y: deltaY * 25 });
+  };
+
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    setMousePosition({ x: 0, y: 0 });
+  };
 
   const moveToNextSlide = useCallback(
     (event: React.MouseEvent, nextId: string) => {
@@ -365,7 +370,11 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.div
-            className="w-full h-64 bg-gray-200 rounded-lg mb-6 overflow-hidden border border-gray-300"
+            ref={imageRef}
+            className="w-full h-64 bg-gray-200 rounded-lg mb-6 overflow-hidden border border-gray-300 relative cursor-pointer"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             whileHover={{ scale: 1.02 }}
           >
             <motion.img
@@ -373,14 +382,37 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
               alt={title}
               className="w-full h-full object-cover"
               initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
+              animate={
+                isInView
+                  ? {
+                      opacity: 1,
+                      x: isHovering ? mousePosition.x : 0,
+                      y: isHovering ? mousePosition.y : 0,
+                      scale: isHovering ? 1.1 : 1,
+                    }
+                  : { opacity: 0 }
+              }
+              transition={{
+                opacity: { delay: 0.3, duration: 0.5 },
+                x: { type: "spring", stiffness: 150, damping: 15 },
+                y: { type: "spring", stiffness: 150, damping: 15 },
+                scale: { duration: 0.3 },
+              }}
+            />
+
+            {/* Overlay gradient on hover */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isHovering ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
             />
           </motion.div>
+
           <motion.h2 className="text-4xl font-bold text-gray-900 mb-3">
             {title}
           </motion.h2>
-          <Separator className="w-12 bg-gray-900" />
+          <Separator className="w-12 bg-primary" />
           <p className="text-base text-gray-700 leading-relaxed">
             {description}
           </p>
@@ -394,7 +426,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
                 <Badge
                   key={tech}
                   variant="outline"
-                  className="text-gray-700 border-gray-300 bg-gray-50"
+                  className="text-gray-700 border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
                   {tech}
                 </Badge>
@@ -408,6 +440,8 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
             <motion.button
               onClick={(e) => moveToNextSlide(e, left)}
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               ← Previous
             </motion.button>
@@ -415,7 +449,9 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
           {right && (
             <motion.button
               onClick={(e) => moveToNextSlide(e, right)}
-              className="px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition"
+              className="px-4 py-2 bg-lg-600 text-white rounded-md text-sm font-medium hover:bg-lg-500 transition"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Next →
             </motion.button>
@@ -424,6 +460,8 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
             <motion.button
               onClick={(e) => moveToNextSlide(e, up)}
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               ↑ Back
             </motion.button>
@@ -432,6 +470,8 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
             <motion.button
               onClick={(e) => moveToNextSlide(e, backToHub)}
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               ↑ Back to Hub
             </motion.button>
