@@ -167,7 +167,7 @@ const slide01: Node<SlideData> = {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Avatar className="size-28 border-2 border-gray-200 shadow-sm">
-              <AvatarImage src="@/src/assets/images/Avatar.jpg" alt="Profile" />
+              <AvatarImage src="/images/Avatar.jpg" alt="Profile" />
               <AvatarFallback className="bg-gray-100 text-gray-900 text-2xl font-semibold">
                 TV
               </AvatarFallback>
