@@ -32,7 +32,16 @@ import TanstackQueryIcon from "@/assets/icons/tanstack-query.svg?react";
 import TypeScriptIcon from "@/assets/icons/typescript.svg?react";
 import ViteIcon from "@/assets/icons/vite.svg?react";
 import WebpackIcon from "@/assets/icons/webpack.svg?react";
-import { ArrowRight, FolderGit2, Github, Linkedin, Mail, Phone, Sparkles, Users } from "lucide-react";
+import {
+  ArrowRight,
+  FolderGit2,
+  Github,
+  Linkedin,
+  Mail,
+  Phone,
+  Sparkles,
+  Users,
+} from "lucide-react";
 
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
@@ -158,7 +167,7 @@ const slide01: Node<SlideData> = {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Avatar className="size-28 border-2 border-gray-200 shadow-sm">
-              <AvatarImage src="src\assets\images\Avatar.jpg" alt="Profile" />
+              <AvatarImage src="@/src/assets/images/Avatar.jpg" alt="Profile" />
               <AvatarFallback className="bg-gray-100 text-gray-900 text-2xl font-semibold">
                 TV
               </AvatarFallback>
@@ -959,8 +968,7 @@ const projectNode02: Node<ProjectCardData> = {
     title: "MB Chat",
     description:
       "A React Native chat mobile app enabling users to send messages, files, and images, with WebRTC-based audio and video calls.",
-    thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=MB+Chat",
+    thumbnail: "https://via.placeholder.com/800x450/e5e7eb/374151?text=MB+Chat",
     technologies: [
       "React Native",
       "TypeScript",
@@ -1000,7 +1008,6 @@ const projectNode03: Node<ProjectCardData> = {
     backToHub: "06",
   },
 };
-
 
 // 07: CONTACT
 const slide07: Node<SlideData> = {
