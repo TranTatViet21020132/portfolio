@@ -11,6 +11,7 @@ import {
   Background,
   ReactFlowProvider,
   BackgroundVariant,
+  Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +19,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import { Slide, SkillIcon, ProjectCard } from "./Slide";
 import { nodes, edges } from "./slides";
+import DarkModeToggle from "./DarkModeToggle";
 
 type ProgressContextType = {
   progress: number;
@@ -25,12 +27,25 @@ type ProgressContextType = {
   updateProgressBySlide: (slideId: string) => void;
 };
 
+type ThemeContextType = {
+  isDark: boolean;
+  setIsDark: (value: boolean) => void;
+};
+
 const ProgressContext = createContext<ProgressContextType | null>(null);
+const ThemeContext = createContext<ThemeContextType | null>(null);
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useProgress = () => {
   const ctx = useContext(ProgressContext);
   if (!ctx) throw new Error("useProgress must be used within ProgressProvider");
+  return ctx;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useTheme = () => {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
   return ctx;
 };
 
@@ -46,9 +61,7 @@ const ProgressProvider = ({ children }: { children: React.ReactNode }) => {
     (slideId: string) => {
       const idx = mainSlides.indexOf(slideId);
       const totalGaps = mainSlides.length - 1;
-
       const p = (idx / totalGaps) * 100;
-
       setProgress(p);
     },
     [mainSlides]
@@ -63,6 +76,41 @@ const ProgressProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isDark, setIsDarkState] = useState(() => {
+    const stored = localStorage.getItem("theme");
+    if (stored) return stored === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
+  const setIsDark = useCallback((value: boolean) => {
+    setIsDarkState(value);
+    // Update document class synchronously
+    if (value) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    // Persist to localStorage
+    localStorage.setItem("theme", value ? "dark" : "light");
+  }, []);
+
+  // Set initial theme on mount
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
+
+  return (
+    <ThemeContext.Provider value={{ isDark, setIsDark }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
 const nodeTypes = {
   slide: Slide,
   skillIcon: SkillIcon,
@@ -73,6 +121,7 @@ const initialSlide = "01";
 
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const duration = 2500;
@@ -99,7 +148,9 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center ${
+        isDark ? "bg-black" : "bg-white"
+      }`}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -118,22 +169,32 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
               scale: [1, 0.8, 1],
             }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-12 h-12 rounded-full bg-white"
+            className={`w-12 h-12 rounded-full ${
+              isDark ? "bg-black" : "bg-white"
+            }`}
           />
         </div>
 
         <div className="text-center space-y-3">
-          <h2 className="text-2xl font-bold" style={{ color: "#5d0425" }}>
+          <h2
+            className="text-2xl font-bold"
+            style={{ color: isDark ? "#e90b5d" : "#5d0425" }}
+          >
             Loading Portfolio
           </h2>
-          <p className="text-sm" style={{ color: "#ba094a" }}>
+          <p
+            style={{ color: isDark ? "#f961a3" : "#ba094a" }}
+            className="text-sm"
+          >
             Preparing your experience...
           </p>
         </div>
 
         <div className="w-64">
           <div
-            className="relative h-2 rounded-full overflow-hidden"
+            className={`relative h-2 rounded-full overflow-hidden ${
+              isDark ? "bg-neutral-900" : "bg-gray-200"
+            }`}
           >
             <motion.div
               className="absolute inset-0 rounded-full"
@@ -167,8 +228,16 @@ function ScrollProgress() {
 }
 
 function FlowContent() {
+  const { isDark } = useTheme();
+
   return (
-    <div className="w-screen h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div
+      className={`w-screen h-screen ${
+        isDark
+          ? "bg-gradient-to-br from-neutral-950 to-neutral-900"
+          : "bg-gradient-to-br from-gray-50 to-white"
+      }`}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -183,10 +252,14 @@ function FlowContent() {
         }}
         minZoom={0.1}
         maxZoom={2}
+        colorMode={isDark ? "dark" : "light"}
         proOptions={{ hideAttribution: true }}
       >
         <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
         <ScrollProgress />
+        <Panel position="top-right">
+          <DarkModeToggle />
+        </Panel>
       </ReactFlow>
     </div>
   );
@@ -202,14 +275,19 @@ export default function App() {
   return (
     <TooltipProvider>
       <ReactFlowProvider>
-        <ProgressProvider>
-          <AnimatePresence mode="wait">
-            {isLoading && (
-              <LoadingScreen key="loading" onComplete={handleLoadingComplete} />
-            )}
-          </AnimatePresence>
-          {!isLoading && <FlowContent />}
-        </ProgressProvider>
+        <ThemeProvider>
+          <ProgressProvider>
+            <AnimatePresence mode="wait">
+              {isLoading && (
+                <LoadingScreen
+                  key="loading"
+                  onComplete={handleLoadingComplete}
+                />
+              )}
+            </AnimatePresence>
+            {!isLoading && <FlowContent />}
+          </ProgressProvider>
+        </ThemeProvider>
       </ReactFlowProvider>
     </TooltipProvider>
   );

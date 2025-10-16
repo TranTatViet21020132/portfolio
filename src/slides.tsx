@@ -34,6 +34,8 @@ import ViteIcon from "@/assets/icons/vite.svg?react";
 import WebpackIcon from "@/assets/icons/webpack.svg?react";
 import {
   ArrowRight,
+  Check,
+  Copy,
   FolderGit2,
   Github,
   Linkedin,
@@ -42,6 +44,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { useState } from "react";
 
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
@@ -136,6 +139,54 @@ const counterVariant: Variants = {
   },
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
+const CopyButton = ({ text }: { text: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <motion.button
+      onClick={handleCopy}
+      className={`p-1.5 rounded transition-colors ${
+        copied
+          ? "bg-green-50 dark:bg-green-950/40"
+          : "bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60"
+      }`}
+      whileHover={!copied ? { scale: 1.1 } : {}}
+      whileTap={!copied ? { scale: 0.95 } : {}}
+    >
+      <AnimatePresence mode="wait">
+        {copied ? (
+          <motion.div
+            key="check"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            exit={{ scale: 0, rotate: 180 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          >
+            <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="copy"
+            initial={{ scale: 0, rotate: 180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            exit={{ scale: 0, rotate: -180 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          >
+            <Copy className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+};
+
 // 01: HOME
 const slide01: Node<SlideData> = {
   id: "01",
@@ -166,9 +217,9 @@ const slide01: Node<SlideData> = {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <Avatar className="size-28 border-2 border-gray-200 shadow-sm">
+            <Avatar className="size-28 border-2 border-gray-200 dark:border-neutral-700 shadow-sm">
               <AvatarImage src="/images/Avatar.jpg" alt="Profile" />
-              <AvatarFallback className="bg-gray-100 text-gray-900 text-2xl font-semibold">
+              <AvatarFallback className="bg-gray-100 dark:bg-neutral-800 text-gray-900 dark:text-neutral-50 text-2xl font-semibold">
                 TV
               </AvatarFallback>
             </Avatar>
@@ -187,20 +238,20 @@ const slide01: Node<SlideData> = {
               }}
             >
               <motion.h2
-                className="text-4xl font-extrabold text-gray-900 leading-tight tracking-tight"
+                className="text-4xl font-extrabold text-gray-900 dark:text-neutral-50 leading-tight tracking-tight"
                 variants={textSlideVariant}
               >
                 Frontend Developer
               </motion.h2>
               <motion.p
-                className="text-xl font-medium text-gray-600"
+                className="text-xl font-medium text-gray-600 dark:text-neutral-400"
                 variants={textSlideVariant}
                 transition={{ delay: 0.2 }}
               >
                 Building High-Performance Web Applications
               </motion.p>
               <motion.p
-                className="text-gray-500 text-base leading-relaxed max-w-md"
+                className="text-gray-500 dark:text-neutral-400 text-base leading-relaxed max-w-md"
                 variants={textSlideVariant}
                 transition={{ delay: 0.4 }}
               >
@@ -211,7 +262,7 @@ const slide01: Node<SlideData> = {
             </motion.div>
           </motion.div>
 
-          <Separator className="bg-gray-200 w-2/3 mx-auto" />
+          <Separator className="bg-gray-200 dark:bg-neutral-800 w-2/3 mx-auto" />
 
           {/* Skills Badges */}
           <motion.div
@@ -240,7 +291,7 @@ const slide01: Node<SlideData> = {
               >
                 <Badge
                   variant="outline"
-                  className="text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-100 transition-all px-4 py-1 text-sm font-medium tracking-wide"
+                  className="text-gray-700 dark:text-neutral-300 border-gray-300 dark:border-neutral-700 hover:border-gray-400 dark:hover:border-neutral-600 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all px-4 py-1 text-sm font-medium tracking-wide"
                 >
                   {skill}
                 </Badge>
@@ -291,11 +342,11 @@ const slide02: Node<SlideData> = {
             }}
           >
             <motion.p
-              className="text-lg sm:text-xl text-gray-700 leading-relaxed font-light"
+              className="text-lg sm:text-xl text-gray-700 dark:text-neutral-300 leading-relaxed font-light"
               variants={textSlideVariant}
             >
               I'm a{" "}
-              <span className="font-semibold text-gray-900">
+              <span className="font-semibold text-gray-900 dark:text-neutral-50">
                 passionate frontend developer
               </span>{" "}
               with 2 years of experience specializing in building
@@ -304,12 +355,12 @@ const slide02: Node<SlideData> = {
             </motion.p>
 
             <motion.p
-              className="text-lg sm:text-xl text-gray-700 leading-relaxed font-light"
+              className="text-lg sm:text-xl text-gray-700 dark:text-neutral-300 leading-relaxed font-light"
               variants={textSlideVariant}
               transition={{ delay: 0.2 }}
             >
               I focus on transforming{" "}
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-gray-900 dark:text-neutral-50">
                 complex requirements into intuitive, visually compelling user
                 interfaces
               </span>{" "}
@@ -319,7 +370,7 @@ const slide02: Node<SlideData> = {
             </motion.p>
           </motion.div>
 
-          <Separator className="bg-gray-200 w-3/4 mx-auto" />
+          <Separator className="bg-gray-200 dark:bg-neutral-800 w-3/4 mx-auto" />
 
           {/* Info Cards */}
           <motion.div
@@ -346,11 +397,11 @@ const slide02: Node<SlideData> = {
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <Card className="h-40 p-6 border-gray-200 bg-gray-50 hover:bg-white hover:shadow-md transition-all">
-                  <p className="text-sm font-semibold text-gray-500 tracking-widest uppercase">
+                <Card className="h-40 p-6 border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-800 hover:bg-white dark:hover:bg-neutral-700 hover:shadow-md dark:hover:shadow-lg transition-all">
+                  <p className="text-sm font-semibold text-gray-500 dark:text-neutral-400 tracking-widest uppercase">
                     {item.label}
                   </p>
-                  <p className="text-xl font-bold text-gray-900 mt-3">
+                  <p className="text-xl font-bold text-gray-900 dark:text-neutral-50 mt-3">
                     {item.value}
                   </p>
                 </Card>
@@ -365,6 +416,7 @@ const slide02: Node<SlideData> = {
   },
 };
 
+// SLIDE 03: LANGUAGES & TOOLS
 const slide03: Node<SlideData> = {
   id: "03",
   type: "slide",
@@ -387,13 +439,13 @@ const slide03: Node<SlideData> = {
           }}
         >
           <motion.p
-            className="text-gray-600 text-base leading-relaxed"
+            className="text-gray-600 dark:text-neutral-400 text-base leading-relaxed"
             variants={textSlideVariant}
           >
             Core technologies I use daily to build robust applications
           </motion.p>
 
-          <Separator className="bg-gray-200 w-1/3" />
+          <Separator className="bg-gray-200 dark:bg-neutral-800 w-1/3" />
 
           <motion.div
             className="grid grid-cols-2 gap-6 sm:gap-8"
@@ -418,10 +470,10 @@ const slide03: Node<SlideData> = {
                   x: 8,
                   transition: { duration: 0.2 },
                 }}
-                className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
+                className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent dark:from-neutral-800 dark:to-transparent hover:from-gray-100 dark:hover:from-neutral-700 transition-colors cursor-default group"
               >
                 <motion.div
-                  className="w-1.5 h-1.5 rounded-full bg-lg-700 group-hover:bg-lg-500"
+                  className="w-1.5 h-1.5 rounded-full bg-lg-700 dark:bg-lg-400 group-hover:bg-lg-500 dark:group-hover:bg-lg-300"
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{
                     duration: 2.5,
@@ -429,7 +481,9 @@ const slide03: Node<SlideData> = {
                     repeat: Infinity,
                   }}
                 />
-                <span className="text-gray-900 font-medium">{tech}</span>
+                <span className="text-gray-900 dark:text-neutral-50 font-medium">
+                  {tech}
+                </span>
               </motion.div>
             ))}
           </motion.div>
@@ -465,12 +519,15 @@ const languageIconNodes: Node<SkillIconData>[] = languageIcons.map(
       position: iconPos,
       data: {
         name: icon.name,
-        iconSvg: <icon.Icon className="w-20 h-20 text-gray-700" />,
+        iconSvg: (
+          <icon.Icon className="w-20 h-20 text-gray-700 dark:text-neutral-300" />
+        ),
       },
     };
   }
 );
 
+// SLIDE 04: FRAMEWORKS & LIBRARIES
 const slide04: Node<SlideData> = {
   id: "04",
   type: "slide",
@@ -493,13 +550,13 @@ const slide04: Node<SlideData> = {
           }}
         >
           <motion.p
-            className="text-gray-600 text-base leading-relaxed"
+            className="text-gray-600 dark:text-neutral-400 text-base leading-relaxed"
             variants={textSlideVariant}
           >
             Modern libraries and frameworks powering my applications
           </motion.p>
 
-          <Separator className="bg-gray-200 w-1/3" />
+          <Separator className="bg-gray-200 dark:bg-neutral-800 w-1/3" />
 
           <motion.div
             variants={{
@@ -514,22 +571,22 @@ const slide04: Node<SlideData> = {
           >
             <Tabs defaultValue="frontend" className="w-full">
               <ScrollArea>
-                <TabsList className="mb-4 gap-1 bg-transparent w-full">
+                <TabsList className="mb-4 gap-1 bg-transparent dark:bg-transparent w-full">
                   <TabsTrigger
                     value="frontend"
-                    className="rounded-full data-[state=active]:bg-lg-500 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
+                    className="rounded-full data-[state=active]:bg-lg-500 dark:data-[state=active]:bg-lg-400 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-neutral-50 transition-colors"
                   >
                     Frontend
                   </TabsTrigger>
                   <TabsTrigger
                     value="state"
-                    className="rounded-full data-[state=active]:bg-lg-500 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
+                    className="rounded-full data-[state=active]:bg-lg-500 dark:data-[state=active]:bg-lg-400 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-neutral-50 transition-colors"
                   >
                     State & Data
                   </TabsTrigger>
                   <TabsTrigger
                     value="build"
-                    className="rounded-full data-[state=active]:bg-lg-500 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 hover:text-gray-900 transition-colors"
+                    className="rounded-full data-[state=active]:bg-lg-500 dark:data-[state=active]:bg-lg-400 data-[state=active]:text-white data-[state=active]:shadow-none text-gray-700 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-neutral-50 transition-colors"
                   >
                     Build Tools
                   </TabsTrigger>
@@ -567,10 +624,10 @@ const slide04: Node<SlideData> = {
                             x: 8,
                             transition: { duration: 0.2 },
                           }}
-                          className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
+                          className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent dark:from-neutral-800 dark:to-transparent hover:from-gray-100 dark:hover:from-neutral-700 transition-colors cursor-default group"
                         >
                           <motion.div
-                            className="w-1.5 h-1.5 rounded-full bg-lg-700 group-hover:bg-lg-500"
+                            className="w-1.5 h-1.5 rounded-full bg-lg-700 dark:bg-lg-400 group-hover:bg-lg-500 dark:group-hover:bg-lg-300"
                             animate={{ scale: [1, 1.3, 1] }}
                             transition={{
                               duration: 2.5,
@@ -578,7 +635,9 @@ const slide04: Node<SlideData> = {
                               repeat: Infinity,
                             }}
                           />
-                          <span className="text-gray-900 font-medium">{t}</span>
+                          <span className="text-gray-900 dark:text-neutral-50 font-medium">
+                            {t}
+                          </span>
                         </motion.div>
                       )
                     )}
@@ -609,10 +668,10 @@ const slide04: Node<SlideData> = {
                           x: 8,
                           transition: { duration: 0.2 },
                         }}
-                        className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
+                        className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent dark:from-neutral-800 dark:to-transparent hover:from-gray-100 dark:hover:from-neutral-700 transition-colors cursor-default group"
                       >
                         <motion.div
-                          className="w-1.5 h-1.5 rounded-full bg-gray-900 group-hover:bg-gray-700"
+                          className="w-1.5 h-1.5 rounded-full bg-lg-700 dark:bg-lg-400 group-hover:bg-lg-500 dark:group-hover:bg-lg-300"
                           animate={{ scale: [1, 1.3, 1] }}
                           transition={{
                             duration: 2.5,
@@ -620,7 +679,9 @@ const slide04: Node<SlideData> = {
                             repeat: Infinity,
                           }}
                         />
-                        <span className="text-gray-900 font-medium">{t}</span>
+                        <span className="text-gray-900 dark:text-neutral-50 font-medium">
+                          {t}
+                        </span>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -650,10 +711,10 @@ const slide04: Node<SlideData> = {
                           x: 8,
                           transition: { duration: 0.2 },
                         }}
-                        className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent hover:from-gray-100 transition-colors cursor-default group"
+                        className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-gray-50 to-transparent dark:from-neutral-800 dark:to-transparent hover:from-gray-100 dark:hover:from-neutral-700 transition-colors cursor-default group"
                       >
                         <motion.div
-                          className="w-1.5 h-1.5 rounded-full bg-gray-900 group-hover:bg-gray-700"
+                          className="w-1.5 h-1.5 rounded-full bg-lg-700 dark:bg-lg-400 group-hover:bg-lg-500 dark:group-hover:bg-lg-300"
                           animate={{ scale: [1, 1.3, 1] }}
                           transition={{
                             duration: 2.5,
@@ -661,7 +722,9 @@ const slide04: Node<SlideData> = {
                             repeat: Infinity,
                           }}
                         />
-                        <span className="text-gray-900 font-medium">{t}</span>
+                        <span className="text-gray-900 dark:text-neutral-50 font-medium">
+                          {t}
+                        </span>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -703,7 +766,9 @@ const frameworkIconNodes: Node<SkillIconData>[] = frameworkIcons.map(
       position: iconPos,
       data: {
         name: icon.name,
-        iconSvg: <icon.Icon className="w-24 h-24 text-gray-700" />,
+        iconSvg: (
+          <icon.Icon className="w-24 h-24 text-gray-700 dark:text-neutral-300" />
+        ),
       },
     };
   }
@@ -722,15 +787,15 @@ const slide05: Node<SlideData> = {
           <TimelineItem step={1}>
             <TimelineHeader>
               <TimelineSeparator />
-              <TimelineDate className="text-gray-600 font-medium">
+              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium">
                 Apr 2024 - Jul 2024
               </TimelineDate>
-              <TimelineTitle className="text-lg font-semibold text-gray-900">
+              <TimelineTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
                 Web Development Trainee
               </TimelineTitle>
-              <TimelineIndicator className="bg-gray-400" />
+              <TimelineIndicator className="bg-gray-400 dark:bg-neutral-600" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600 text-base">
+            <TimelineContent className="text-gray-600 dark:text-neutral-400 text-base">
               Viettel Digital Talent Program trainee. Learned web development
               fundamentals including Front-End, Back-End, Database, Web
               Optimization, and Security. Collaborated on final assessment
@@ -740,15 +805,15 @@ const slide05: Node<SlideData> = {
           <TimelineItem step={2}>
             <TimelineHeader>
               <TimelineSeparator />
-              <TimelineDate className="text-gray-600 font-medium">
+              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium">
                 Jul 2024 - Oct 2024
               </TimelineDate>
-              <TimelineTitle className="text-lg font-semibold text-gray-900">
+              <TimelineTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
                 Frontend Intern
               </TimelineTitle>
-              <TimelineIndicator className="bg-gray-400" />
+              <TimelineIndicator className="bg-gray-400 dark:bg-neutral-600" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600 text-base">
+            <TimelineContent className="text-gray-600 dark:text-neutral-400 text-base">
               At FPT IS, built pages and components from Figma designs,
               integrated APIs, and developed features based on client requests.
               Worked on IWM, CRM, and e-Procurement projects.
@@ -757,15 +822,15 @@ const slide05: Node<SlideData> = {
           <TimelineItem step={3}>
             <TimelineHeader>
               <TimelineSeparator />
-              <TimelineDate className="text-gray-600 font-medium">
+              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium">
                 Jan 2025 - Present
               </TimelineDate>
-              <TimelineTitle className="text-lg font-semibold text-gray-900">
+              <TimelineTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
                 Frontend Developer
               </TimelineTitle>
-              <TimelineIndicator className="bg-gray-400" />
+              <TimelineIndicator className="bg-gray-400 dark:bg-neutral-600" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600 text-base">
+            <TimelineContent className="text-gray-600 dark:text-neutral-400 text-base">
               At FPT Software, transforming requirements into creative UIs.
               Optimizing large-scale data rendering with React Flow, processing
               millions of Excel rows, and managing complex state interactions.
@@ -789,7 +854,7 @@ const slide06: Node<SlideData> = {
     title: "Featured Projects",
     content: (
       <motion.div
-        className="space-y-10 max-w-4xl mx-auto p-8"
+        className="space-y-10 max-w-4xl mx-auto p-4 sm:p-8"
         initial="hidden"
         animate="visible"
         variants={{
@@ -819,15 +884,15 @@ const slide06: Node<SlideData> = {
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="w-6 h-6 text-gray-600" />
+              <Sparkles className="w-6 h-6 text-gray-600 dark:text-neutral-400" />
             </motion.div>
-            <h3 className="text-xl text-gray-600 font-light">
+            <h3 className="text-xl text-gray-600 dark:text-neutral-400 font-light">
               A showcase of my work
             </h3>
           </motion.div>
 
           <motion.p
-            className="text-lg text-gray-700 leading-relaxed max-w-2xl"
+            className="text-lg text-gray-700 dark:text-neutral-300 leading-relaxed max-w-2xl"
             variants={textSlideVariant}
           >
             From real-time chat systems with encryption to task management tools
@@ -835,7 +900,7 @@ const slide06: Node<SlideData> = {
             expertise in full-stack development and front-end leadership.
           </motion.p>
 
-          <Separator className="bg-gray-200 w-1/4" />
+          <Separator className="bg-gray-200 dark:bg-neutral-800 w-1/4" />
         </motion.div>
 
         {/* Stats Grid */}
@@ -855,20 +920,20 @@ const slide06: Node<SlideData> = {
               label: "TOTAL PROJECTS",
               value: "20+",
               description: "Completed & Deployed",
-              color: "text-gray-700",
+              color: "text-gray-700 dark:text-neutral-300",
             },
             {
               icon: Users,
               label: "TEAM EXPERIENCE",
               value: "4+ members",
               description: "Worked in collaborative teams",
-              color: "text-gray-700",
+              color: "text-gray-700 dark:text-neutral-300",
             },
           ].map((stat, idx) => (
             <motion.div key={stat.label} variants={gridItemVariant}>
-              <Card className="relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg transition-all duration-300 overflow-hidden group">
+              <Card className="relative h-full p-6 border-gray-200 dark:border-neutral-800 bg-gradient-to-br from-gray-50 dark:from-neutral-800 to-white dark:to-neutral-900 hover:shadow-lg dark:hover:shadow-2xl transition-all duration-300 overflow-hidden group">
                 <motion.div
-                  className="absolute -right-8 -top-8 w-32 h-32 bg-gray-100 rounded-full opacity-20 group-hover:opacity-30 transition-opacity"
+                  className="absolute -right-8 -top-8 w-32 h-32 bg-gray-100 dark:bg-neutral-700 rounded-full opacity-20 group-hover:opacity-30 transition-opacity"
                   animate={{
                     scale: [1, 1.2, 1],
                   }}
@@ -882,11 +947,11 @@ const slide06: Node<SlideData> = {
                 <div className="relative space-y-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
-                      <p className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                      <p className="text-xs font-bold text-gray-500 dark:text-neutral-500 tracking-widest uppercase">
                         {stat.label}
                       </p>
                       <motion.p
-                        className="text-4xl font-bold text-gray-900"
+                        className="text-4xl font-bold text-gray-900 dark:text-neutral-50"
                         variants={counterVariant}
                       >
                         {stat.value}
@@ -895,9 +960,9 @@ const slide06: Node<SlideData> = {
                     <stat.icon className={`w-8 h-8 ${stat.color}`} />
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-neutral-400">
                     <motion.div
-                      className="w-1 h-1 rounded-full bg-gray-600"
+                      className="w-1 h-1 rounded-full bg-gray-600 dark:bg-neutral-400"
                       animate={{ scale: [1, 1.5, 1] }}
                       transition={{
                         duration: 2,
@@ -915,7 +980,7 @@ const slide06: Node<SlideData> = {
 
         {/* Navigation Hint */}
         <motion.div
-          className="flex items-center justify-center gap-3 text-gray-500 pt-4"
+          className="flex items-center justify-center gap-3 text-gray-500 dark:text-neutral-500 pt-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
@@ -946,7 +1011,7 @@ const projectNode01: Node<ProjectCardData> = {
     description:
       "A real-time chat web app featuring E2EE messaging, file sharing, group chats, and encrypted audio/video calls.",
     thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=EE2E+Chat",
+      "/images/ee2echat.png",
     technologies: [
       "React",
       "Tailwind",
@@ -968,7 +1033,7 @@ const projectNode02: Node<ProjectCardData> = {
     title: "MB Chat",
     description:
       "A React Native chat mobile app enabling users to send messages, files, and images, with WebRTC-based audio and video calls.",
-    thumbnail: "https://via.placeholder.com/800x450/e5e7eb/374151?text=MB+Chat",
+    thumbnail: "/images/mbchat.jpg",
     technologies: [
       "React Native",
       "TypeScript",
@@ -990,9 +1055,9 @@ const projectNode03: Node<ProjectCardData> = {
   data: {
     title: "Tasktify",
     description:
-      "A simple task management system featuring analytics and Drag & Drop for intuitive task organization.",
+      "A task management system featuring analytics and Drag & Drop for intuitive task organization.",
     thumbnail:
-      "https://via.placeholder.com/800x450/e5e7eb/374151?text=Tasktify",
+      "/images/tasktify.png",
     technologies: [
       "React",
       "Tailwind",
@@ -1016,11 +1081,13 @@ const slide07: Node<SlideData> = {
   position: getPosition(0, 6),
   data: {
     title: "Let's Connect",
+    downLabel: "↑ Back to Top",
+    down: "01",
     content: (
       <AnimatePresence mode="wait">
         <motion.div
           key="slide-07"
-          className="max-w-4xl mx-auto space-y-12 p-8"
+          className="max-w-4xl mx-auto space-y-12 p-4 sm:p-8"
           initial="hidden"
           animate="visible"
           variants={{
@@ -1040,19 +1107,19 @@ const slide07: Node<SlideData> = {
             }}
           >
             <motion.h3
-              className="text-3xl font-bold text-gray-900"
+              className="text-3xl font-bold text-gray-900 dark:text-neutral-50"
               variants={textSlideVariant}
             >
               Get In Touch
             </motion.h3>
             <motion.p
-              className="text-gray-600 text-lg max-w-xl mx-auto"
+              className="text-gray-600 dark:text-neutral-400 text-lg max-w-xl mx-auto"
               variants={textSlideVariant}
             >
               Feel free to reach out for collaborations, opportunities, or just
               to say hello!
             </motion.p>
-            <Separator className="bg-gray-200 w-1/4 mx-auto" />
+            <Separator className="bg-gray-200 dark:bg-rose-900/30 w-1/4 mx-auto" />
           </motion.div>
 
           {/* Contact Cards Grid */}
@@ -1068,9 +1135,9 @@ const slide07: Node<SlideData> = {
           >
             {/* Email Card */}
             <motion.div variants={gridItemVariant}>
-              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
+              <Card className="group relative h-full p-6 border-gray-200 dark:border-rose-900/30 bg-gradient-to-br from-gray-50 dark:from-rose-950/20 to-white dark:to-neutral-900 hover:shadow-lg dark:hover:shadow-xl hover:shadow-rose-200/50 dark:hover:shadow-rose-900/30 hover:border-rose-300 dark:hover:border-rose-800/50 transition-all duration-300 overflow-hidden cursor-default">
                 <motion.div
-                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-rose-100 dark:bg-rose-900/30 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
                   animate={{
                     scale: [1, 1.1, 1],
                   }}
@@ -1081,91 +1148,108 @@ const slide07: Node<SlideData> = {
                 />
                 <div className="relative space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 dark:from-rose-600 dark:to-rose-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Mail className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                    <span className="text-xs font-bold text-gray-500 dark:text-neutral-500 tracking-widest uppercase">
                       Email
                     </span>
                   </div>
-                  <p className="text-lg font-semibold text-gray-900 break-all pl-1">
-                    trantatviet2003@gmail.com
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-neutral-50 break-all">
+                      trantatviet2003@gmail.com
+                    </p>
+                    <CopyButton text="trantatviet2003@gmail.com" />
+                  </div>
                 </div>
               </Card>
             </motion.div>
 
             {/* LinkedIn Card */}
             <motion.div variants={gridItemVariant}>
-              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
-                <motion.div
-                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
-                  animate={{
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 3,
-                    delay: 0.5,
-                    repeat: Infinity,
-                  }}
-                />
-                <div className="relative space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Linkedin className="w-5 h-5 text-white" />
+              <a
+                href="https://linkedin.com/in/trần-tất-việt-bab402319"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Card className="group relative h-full p-6 border-gray-200 dark:border-rose-900/30 bg-gradient-to-br from-gray-50 dark:from-rose-950/20 to-white dark:to-neutral-900 hover:shadow-lg dark:hover:shadow-xl hover:shadow-rose-200/50 dark:hover:shadow-rose-900/30 hover:border-rose-300 dark:hover:border-rose-800/50 transition-all duration-300 overflow-hidden cursor-pointer">
+                  <motion.div
+                    className="absolute -right-6 -bottom-6 w-32 h-32 bg-rose-100 dark:bg-rose-900/30 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                    animate={{
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                      duration: 3,
+                      delay: 0.5,
+                      repeat: Infinity,
+                    }}
+                  />
+                  <div className="relative space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 dark:from-rose-600 dark:to-rose-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Linkedin className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-xs font-bold text-gray-500 dark:text-neutral-500 tracking-widest uppercase">
+                        LinkedIn
+                      </span>
                     </div>
-                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
-                      LinkedIn
-                    </span>
+                    <p className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
+                      Trần Tất Việt
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-neutral-400">
+                      linkedin.com/in/trần-tất-việt-bab402319
+                    </p>
                   </div>
-                  <p className="text-lg font-semibold text-gray-900 pl-1">
-                    Trần Tất Việt
-                  </p>
-                  <p className="text-sm text-gray-600 pl-1">
-                    linkedin.com/in/trần-tất-việt-bab402319
-                  </p>
-                </div>
-              </Card>
+                </Card>
+              </a>
             </motion.div>
 
             {/* GitHub Card */}
             <motion.div variants={gridItemVariant}>
-              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
-                <motion.div
-                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
-                  animate={{
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 3,
-                    delay: 1,
-                    repeat: Infinity,
-                  }}
-                />
-                <div className="relative space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Github className="w-5 h-5 text-white" />
+              <a
+                href="https://github.com/TranTatViet21020132"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Card className="group relative h-full p-6 border-gray-200 dark:border-rose-900/30 bg-gradient-to-br from-gray-50 dark:from-rose-950/20 to-white dark:to-neutral-900 hover:shadow-lg dark:hover:shadow-xl hover:shadow-rose-200/50 dark:hover:shadow-rose-900/30 hover:border-rose-300 dark:hover:border-rose-800/50 transition-all duration-300 overflow-hidden cursor-pointer">
+                  <motion.div
+                    className="absolute -right-6 -bottom-6 w-32 h-32 bg-rose-100 dark:bg-rose-900/30 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                    animate={{
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                      duration: 3,
+                      delay: 1,
+                      repeat: Infinity,
+                    }}
+                  />
+                  <div className="relative space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 dark:from-rose-600 dark:to-rose-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Github className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-xs font-bold text-gray-500 dark:text-neutral-500 tracking-widest uppercase">
+                        GitHub
+                      </span>
                     </div>
-                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
-                      GitHub
-                    </span>
+                    <p className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
+                      TranTatViet21020132
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-neutral-400">
+                      github.com/TranTatViet21020132
+                    </p>
                   </div>
-                  <p className="text-lg font-semibold text-gray-900 pl-1">
-                    TranTatViet21020132
-                  </p>
-                  <p className="text-sm text-gray-600 pl-1">
-                    github.com/TranTatViet21020132
-                  </p>
-                </div>
-              </Card>
+                </Card>
+              </a>
             </motion.div>
 
-            {/* Location Card */}
+            {/* Phone Card */}
             <motion.div variants={gridItemVariant}>
-              <Card className="group relative h-full p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg hover:border-gray-300 transition-all duration-300 overflow-hidden cursor-pointer">
+              <Card className="group relative h-full p-6 border-gray-200 dark:border-rose-900/30 bg-gradient-to-br from-gray-50 dark:from-rose-950/20 to-white dark:to-neutral-900 hover:shadow-lg dark:hover:shadow-xl hover:shadow-rose-200/50 dark:hover:shadow-rose-900/30 hover:border-rose-300 dark:hover:border-rose-800/50 transition-all duration-300 overflow-hidden cursor-default">
                 <motion.div
-                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-gray-100 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
+                  className="absolute -right-6 -bottom-6 w-32 h-32 bg-rose-100 dark:bg-rose-900/30 rounded-full opacity-0 group-hover:opacity-20 transition-opacity"
                   animate={{
                     scale: [1, 1.1, 1],
                   }}
@@ -1177,19 +1261,24 @@ const slide07: Node<SlideData> = {
                 />
                 <div className="relative space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 dark:from-rose-600 dark:to-rose-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Phone className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                    <span className="text-xs font-bold text-gray-500 dark:text-neutral-500 tracking-widest uppercase">
                       Phone number
                     </span>
                   </div>
-                  <p className="text-lg font-semibold text-gray-900 pl-1">
-                    (+84) 97-9235-038
-                  </p>
-                  <p className="text-sm text-gray-600 pl-1">
-                    Open to remote opportunities
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
+                        (+84) 97-9235-038
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-neutral-400">
+                        Open to remote opportunities
+                      </p>
+                    </div>
+                    <CopyButton text="(+84) 97-9235-038" />
+                  </div>
                 </div>
               </Card>
             </motion.div>
@@ -1203,12 +1292,12 @@ const slide07: Node<SlideData> = {
             transition={{ delay: 0.6, duration: 0.5 }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 text-gray-600"
+              className="inline-flex items-center gap-2 text-gray-600 dark:text-neutral-400"
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
               <motion.div
-                className="w-2 h-2 rounded-full bg-green-500"
+                className="w-2 h-2 rounded-full bg-rose-500 dark:bg-rose-400"
                 animate={{ opacity: [1, 0.3, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />

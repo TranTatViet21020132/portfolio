@@ -17,9 +17,13 @@ export type SlideData = {
   title: string;
   content: React.ReactNode;
   left?: string;
+  leftLabel?: string;
   up?: string;
+  upLabel?: string;
   down?: string;
+  downLabel?: string;
   right?: string;
+  rightLabel?: string;
 };
 
 export type SkillIconData = {
@@ -95,7 +99,18 @@ const iconVariants = {
 };
 
 export function Slide({ data }: NodeProps<Node<SlideData>>) {
-  const { title, content, left, up, down, right } = data;
+  const {
+    title,
+    content,
+    left,
+    leftLabel,
+    up,
+    upLabel,
+    down,
+    downLabel,
+    right,
+    rightLabel,
+  } = data;
   const { fitView } = useReactFlow();
   const { updateProgressBySlide } = useProgress();
   const ref = useRef(null);
@@ -125,8 +140,7 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
       className="w-full h-full"
       key={`slide-${title}`}
     >
-      <Card className="w-full h-full bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col justify-between p-12 relative overflow-hidden">
-        {/* invisible handles */}
+      <Card className="w-full h-full bg-white dark:bg-neutral-900 shadow-lg rounded-lg border border-gray-200 dark:border-neutral-800 flex flex-col justify-between p-12 relative overflow-hidden">
         {["Top", "Right", "Bottom", "Left"].map((pos) => (
           <Handle
             key={`src-${pos}`}
@@ -146,7 +160,6 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
           />
         ))}
 
-        {/* content */}
         <motion.div
           className="relative z-10 space-y-6"
           variants={containerVariants}
@@ -156,7 +169,7 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
         >
           <motion.div variants={slideInLeftVariants}>
             <motion.h1
-              className="text-5xl font-bold text-gray-900 mb-4"
+              className="text-5xl font-bold text-gray-900 dark:text-neutral-50 mb-4"
               variants={titleVariants}
             >
               {title}
@@ -167,19 +180,18 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
               transition={{ duration: 0.8, delay: 0.3 }}
               style={{ originX: 0 }}
             >
-              <Separator className="w-12 bg-gray-900" />
+              <Separator className="w-12 bg-gray-900 dark:bg-lg-400" />
             </motion.div>
           </motion.div>
 
           <motion.div
-            className="text-base text-gray-700 leading-relaxed space-y-3"
+            className="text-base text-gray-700 dark:text-neutral-300 leading-relaxed space-y-3"
             variants={slideInUpVariants}
           >
             {content}
           </motion.div>
         </motion.div>
 
-        {/* navigation buttons */}
         <motion.div
           className="flex gap-2 justify-end items-center mt-8 flex-wrap relative z-10"
           variants={containerVariants}
@@ -193,11 +205,11 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
                   render={
                     <motion.button
                       onClick={(e) => moveToNextSlide(e, left)}
-                      className="px-4 py-2 rounded-md border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 rounded-md border border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-neutral-50 font-medium text-sm hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
                       whileHover="hover"
                       whileTap="tap"
                     >
-                      ← Back
+                      {leftLabel || "← Back"}
                     </motion.button>
                   }
                 />
@@ -212,11 +224,11 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
                   render={
                     <motion.button
                       onClick={(e) => moveToNextSlide(e, up)}
-                      className="px-4 py-2 rounded-md border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 rounded-md border border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-neutral-50 font-medium text-sm hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
                       whileHover="hover"
                       whileTap="tap"
                     >
-                      ↑ Up
+                      {upLabel || "↑ Up"}
                     </motion.button>
                   }
                 />
@@ -231,11 +243,11 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
                   render={
                     <motion.button
                       onClick={(e) => moveToNextSlide(e, down)}
-                      className="px-4 py-2 rounded-md border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 rounded-md border border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-neutral-50 font-medium text-sm hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
                       whileHover="hover"
                       whileTap="tap"
                     >
-                      ↓ Down
+                      {downLabel || "↓ Down"}
                     </motion.button>
                   }
                 />
@@ -250,11 +262,11 @@ export function Slide({ data }: NodeProps<Node<SlideData>>) {
                   render={
                     <motion.button
                       onClick={(e) => moveToNextSlide(e, right)}
-                      className="px-4 py-2 rounded-md bg-lg-600 text-white font-medium text-sm hover:bg-lg-500 transition-colors"
+                      className="px-4 py-2 rounded-md bg-lg-600 dark:bg-lg-400 text-white font-medium text-sm hover:bg-lg-500 dark:hover:bg-lg-300 transition-colors"
                       whileHover="hover"
                       whileTap="tap"
                     >
-                      Next →
+                      {rightLabel || "Next →"}
                     </motion.button>
                   }
                 />
@@ -286,17 +298,16 @@ export function SkillIcon({ data }: NodeProps<Node<SkillIconData>>) {
         <TooltipTrigger
           render={
             <motion.div
-              className="bg-white rounded-lg p-6 flex flex-col items-center justify-center hover:shadow-md transition-shadow border border-gray-200 cursor-pointer"
+              className="bg-white dark:bg-neutral-800 rounded-lg p-6 flex flex-col items-center justify-center hover:shadow-md dark:hover:shadow-lg transition-shadow border border-gray-200 dark:border-neutral-700 cursor-pointer"
               whileHover="hover"
             >
-              <motion.div className="text-gray-700">{iconSvg}</motion.div>
-              {/* <motion.p className="font-medium text-gray-900 text-center text-sm">
-                {name}
-              </motion.p> */}
+              <motion.div className="text-gray-700 dark:text-neutral-300">
+                {iconSvg}
+              </motion.div>
             </motion.div>
           }
         />
-        <TooltipPopup className={"font-bold"}>{name}</TooltipPopup>
+        <TooltipPopup className="font-bold">{name}</TooltipPopup>
       </Tooltip>
     </motion.div>
   );
@@ -312,6 +323,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
     right,
     up,
     backToHub,
+    github,
   } = data;
   const { fitView } = useReactFlow();
   const { updateProgressBySlide } = useProgress();
@@ -329,7 +341,6 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    // Calculate distance from center, with stronger effect
     const deltaX = (e.clientX - centerX) / rect.width;
     const deltaY = (e.clientY - centerY) / rect.height;
 
@@ -340,6 +351,12 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
   const handleMouseLeave = () => {
     setIsHovering(false);
     setMousePosition({ x: 0, y: 0 });
+  };
+
+  const handleImageClick = () => {
+    if (github) {
+      window.open(github, "_blank");
+    }
   };
 
   const moveToNextSlide = useCallback(
@@ -362,7 +379,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
       className="w-full h-full"
       key={`project-${title}`}
     >
-      <Card className="w-full h-full bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col p-8 relative overflow-hidden">
+      <Card className="w-full h-full bg-white dark:bg-neutral-900 shadow-lg rounded-lg border border-gray-200 dark:border-neutral-800 flex flex-col p-8 relative overflow-hidden">
         <motion.div
           className="flex-1 relative z-10 space-y-5"
           variants={containerVariants}
@@ -371,10 +388,11 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
         >
           <motion.div
             ref={imageRef}
-            className="w-full h-64 bg-gray-200 rounded-lg mb-6 overflow-hidden border border-gray-300 relative cursor-pointer"
+            className="w-full h-64 bg-gray-200 dark:bg-neutral-800 rounded-lg mb-6 overflow-hidden border border-gray-300 dark:border-neutral-700 relative cursor-pointer transition-all"
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onClick={handleImageClick}
             whileHover={{ scale: 1.02 }}
           >
             <motion.img
@@ -400,25 +418,24 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
               }}
             />
 
-            {/* Overlay gradient on hover */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"
+              className="absolute inset-0 bg-gradient-to-t from-neutral-900/50 to-transparent pointer-events-none dark:from-neutral-950/70"
               initial={{ opacity: 0 }}
               animate={{ opacity: isHovering ? 1 : 0 }}
               transition={{ duration: 0.3 }}
             />
           </motion.div>
 
-          <motion.h2 className="text-4xl font-bold text-gray-900 mb-3">
+          <motion.h2 className="text-4xl font-bold text-gray-900 dark:text-neutral-50 mb-3">
             {title}
           </motion.h2>
           <Separator className="w-12 bg-primary" />
-          <p className="text-base text-gray-700 leading-relaxed">
+          <p className="text-base text-gray-700 dark:text-neutral-300 leading-relaxed">
             {description}
           </p>
 
           <div className="space-y-3">
-            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wide">
               Technologies
             </p>
             <div className="flex flex-wrap gap-2">
@@ -426,7 +443,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
                 <Badge
                   key={tech}
                   variant="outline"
-                  className="text-gray-700 border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors"
+                  className="text-gray-700 dark:text-neutral-300 border-gray-300 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
                 >
                   {tech}
                 </Badge>
@@ -435,11 +452,11 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
           </div>
         </motion.div>
 
-        <div className="flex gap-2 mt-6 pt-6 border-t border-gray-200">
+        <div className="justify-end flex gap-2 mt-6 pt-6 border-t border-gray-200 dark:border-neutral-800">
           {left && (
             <motion.button
               onClick={(e) => moveToNextSlide(e, left)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+              className="px-4 py-2 border border-gray-300 dark:border-neutral-700 rounded-md text-gray-900 dark:text-neutral-50 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -449,7 +466,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
           {right && (
             <motion.button
               onClick={(e) => moveToNextSlide(e, right)}
-              className="px-4 py-2 bg-lg-600 text-white rounded-md text-sm font-medium hover:bg-lg-500 transition"
+              className="px-4 py-2 bg-lg-600 dark:bg-lg-400 text-white rounded-md text-sm font-medium hover:bg-lg-500 dark:hover:bg-lg-300 transition"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -459,7 +476,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
           {up && (
             <motion.button
               onClick={(e) => moveToNextSlide(e, up)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+              className="px-4 py-2 border border-gray-300 dark:border-neutral-700 rounded-md text-gray-900 dark:text-neutral-50 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -469,7 +486,7 @@ export function ProjectCard({ data }: NodeProps<Node<ProjectCardData>>) {
           {backToHub && (
             <motion.button
               onClick={(e) => moveToNextSlide(e, backToHub)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 text-sm font-medium hover:bg-gray-50 transition"
+              className="px-4 py-2 border border-gray-300 dark:border-neutral-700 rounded-md text-gray-900 dark:text-neutral-50 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
