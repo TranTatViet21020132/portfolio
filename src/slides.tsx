@@ -847,7 +847,7 @@ const slide05: Node<SlideData> = {
             </TimelineHeader>
             <TimelineContent className="text-gray-600 dark:text-neutral-400 space-y-2">
               <p className="font-medium text-gray-700 dark:text-neutral-300 text-timeline-company mb-3">
-                Vietel Digital Talent Program
+                Viettel Digital Talent
               </p>
               <ul className="space-y-2 ml-4">
                 <li className="flex gap-3 text-timeline-bullet">
