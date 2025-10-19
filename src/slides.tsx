@@ -305,7 +305,7 @@ const slide01: Node<SlideData> = {
   },
 };
 
-// 02: ABOUT
+// SLIDE 02: ABOUT (UPDATED)
 const slide02: Node<SlideData> = {
   id: "02",
   type: "slide",
@@ -316,7 +316,7 @@ const slide02: Node<SlideData> = {
       <AnimatePresence mode="wait">
         <motion.div
           key={"02"}
-          className="max-w-3xl mx-auto space-y-12 p-8"
+          className="max-w-5xl mx-auto space-y-12 p-8"
           initial="hidden"
           animate="visible"
           variants={{
@@ -342,7 +342,7 @@ const slide02: Node<SlideData> = {
             }}
           >
             <motion.p
-              className="text-lg sm:text-xl text-gray-700 dark:text-neutral-300 leading-relaxed font-light"
+              className="text-xl sm:text-2xl text-gray-700 dark:text-neutral-300 leading-relaxed font-light"
               variants={textSlideVariant}
             >
               I'm a{" "}
@@ -355,7 +355,7 @@ const slide02: Node<SlideData> = {
             </motion.p>
 
             <motion.p
-              className="text-lg sm:text-xl text-gray-700 dark:text-neutral-300 leading-relaxed font-light"
+              className="text-xl sm:text-2xl text-gray-700 dark:text-neutral-300 leading-relaxed font-light"
               variants={textSlideVariant}
               transition={{ delay: 0.2 }}
             >
@@ -374,7 +374,7 @@ const slide02: Node<SlideData> = {
 
           {/* Info Cards */}
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-8"
             initial="hidden"
             animate="visible"
             variants={{
@@ -388,7 +388,7 @@ const slide02: Node<SlideData> = {
             {[
               { label: "LOCATION", value: "Hanoi, Vietnam" },
               { label: "EXPERIENCE", value: "2 Years" },
-              { label: "EDUCATION", value: "VNU-UET" },
+              { label: "EDUCATION", value: "VNU-UET (GPA: 3.62)" },
             ].map((item) => (
               <motion.div
                 key={item.label}
@@ -407,6 +407,56 @@ const slide02: Node<SlideData> = {
                 </Card>
               </motion.div>
             ))}
+          </motion.div>
+
+          {/* Achievements Summary */}
+          <motion.div
+            className="space-y-4 bg-gray-50 dark:bg-neutral-800/50 p-6 rounded-lg"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { delayChildren: 0.5, staggerChildren: 0.1 },
+              },
+            }}
+          >
+            <p className="text-base font-semibold text-gray-600 dark:text-neutral-400 tracking-widest uppercase">
+              Highlights
+            </p>
+            <div className="space-y-3 text-gray-700 dark:text-neutral-300 text-lg">
+              <motion.div
+                className="flex items-center gap-3"
+                variants={{
+                  hidden: { opacity: 0, x: -10 },
+                  visible: { opacity: 1, x: 0 },
+                }}
+              >
+                <span className="text-2xl">•</span>
+                <span>Great Student awards (2nd & 4th year)</span>
+              </motion.div>
+              <motion.div
+                className="flex items-center gap-3"
+                variants={{
+                  hidden: { opacity: 0, x: -10 },
+                  visible: { opacity: 1, x: 0 },
+                }}
+              >
+                <span className="text-2xl">•</span>
+                <span>Excellent Student certificate (3rd year)</span>
+              </motion.div>
+              <motion.div
+                className="flex items-center gap-3"
+                variants={{
+                  hidden: { opacity: 0, x: -10 },
+                  visible: { opacity: 1, x: 0 },
+                }}
+              >
+                <span className="text-2xl">•</span>
+                <span>IELTS 7.5 (Academic)</span>
+              </motion.div>
+            </div>
           </motion.div>
         </motion.div>
       </AnimatePresence>
@@ -774,7 +824,7 @@ const frameworkIconNodes: Node<SkillIconData>[] = frameworkIcons.map(
   }
 );
 
-// 05: EXPERIENCE
+// SLIDE 05: EXPERIENCE (UPDATED)
 const slide05: Node<SlideData> = {
   id: "05",
   type: "slide",
@@ -782,59 +832,117 @@ const slide05: Node<SlideData> = {
   data: {
     title: "Experience",
     content: (
-      <div className="space-y-4">
+      <div className="space-y-6 max-w-5xl">
         <Timeline defaultValue={3}>
           <TimelineItem step={1}>
             <TimelineHeader>
               <TimelineSeparator />
-              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium">
+              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium text-timeline-date">
                 Apr 2024 - Jul 2024
               </TimelineDate>
-              <TimelineTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
+              <TimelineTitle className="text-3xl font-semibold text-gray-900 dark:text-neutral-50">
                 Web Development Trainee
               </TimelineTitle>
               <TimelineIndicator className="bg-gray-400 dark:bg-neutral-600" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600 dark:text-neutral-400 text-base">
-              Viettel Digital Talent Program trainee. Learned web development
-              fundamentals including Front-End, Back-End, Database, Web
-              Optimization, and Security. Collaborated on final assessment
-              project.
+            <TimelineContent className="text-gray-600 dark:text-neutral-400 space-y-2">
+              <p className="font-medium text-gray-700 dark:text-neutral-300 text-timeline-company mb-3">
+                Vietel Digital Talent Program
+              </p>
+              <ul className="space-y-2 ml-4">
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Learned web development fundamentals: Front-End, Back-End, Database, Web Optimization & Security</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Collaborated with trainees on final assessment project</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Passed phase 2 of VDT program</span>
+                </li>
+              </ul>
             </TimelineContent>
           </TimelineItem>
+
           <TimelineItem step={2}>
             <TimelineHeader>
               <TimelineSeparator />
-              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium">
+              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium text-timeline-date">
                 Jul 2024 - Oct 2024
               </TimelineDate>
-              <TimelineTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
+              <TimelineTitle className="text-3xl font-semibold text-gray-900 dark:text-neutral-50">
                 Frontend Intern
               </TimelineTitle>
               <TimelineIndicator className="bg-gray-400 dark:bg-neutral-600" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600 dark:text-neutral-400 text-base">
-              At FPT IS, built pages and components from Figma designs,
-              integrated APIs, and developed features based on client requests.
-              Worked on IWM, CRM, and e-Procurement projects.
+            <TimelineContent className="text-gray-600 dark:text-neutral-400 space-y-2">
+              <p className="font-medium text-gray-700 dark:text-neutral-300 text-timeline-company mb-3">
+                FPT IS
+              </p>
+              <ul className="space-y-2 ml-4">
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Built pages and components from Figma designs with pixel-perfect accuracy</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Integrated APIs into applications and resolved client requirements</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Worked on IWM, CRM, and e-Procurement projects with Agile/Scrum methodology</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Received daily tasks and backlogs via Azure DevOps</span>
+                </li>
+              </ul>
             </TimelineContent>
           </TimelineItem>
+
           <TimelineItem step={3}>
             <TimelineHeader>
               <TimelineSeparator />
-              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium">
-                Jan 2025 - Present
+              <TimelineDate className="text-gray-600 dark:text-neutral-400 font-medium text-timeline-date">
+                Nov 2024 - Present
               </TimelineDate>
-              <TimelineTitle className="text-lg font-semibold text-gray-900 dark:text-neutral-50">
+              <TimelineTitle className="text-3xl font-semibold text-gray-900 dark:text-neutral-50">
                 Frontend Developer
               </TimelineTitle>
               <TimelineIndicator className="bg-gray-400 dark:bg-neutral-600" />
             </TimelineHeader>
-            <TimelineContent className="text-gray-600 dark:text-neutral-400 text-base">
-              At FPT Software, transforming requirements into creative UIs.
-              Optimizing large-scale data rendering with React Flow, processing
-              millions of Excel rows, and managing complex state interactions.
-              Collaborating with backend to ensure system scalability.
+            <TimelineContent className="text-gray-600 dark:text-neutral-400 space-y-2">
+              <p className="font-medium text-gray-700 dark:text-neutral-300 text-timeline-company mb-3">
+                FPT Software
+              </p>
+              <ul className="space-y-2 ml-4">
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Transforming complex requirements into creative, immersive UIs</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Optimizing large-scale data rendering using React Flow for handling millions of rows</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Processing millions of Excel data rows seamlessly on client-side into data tables</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Managing complex state interactions and system-wide architecture</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Collaborating with backend team to optimize data insertion, storage, and queries for scalability</span>
+                </li>
+                <li className="flex gap-3 text-timeline-bullet">
+                  <span>•</span>
+                  <span>Tech stack: React, TypeScript, Zustand, React Query, Tailwind, Shadcn/ui</span>
+                </li>
+              </ul>
             </TimelineContent>
           </TimelineItem>
         </Timeline>

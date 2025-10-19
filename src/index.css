@@ -93,6 +93,11 @@ body,
   --color-slate-700: #334155;
   --color-slate-800: #1e293b;
   --color-slate-900: #0f172a;
+
+  /* Custom font sizes for timeline */
+  --font-size-timeline-date: 1.15rem;      /* 18px */
+  --font-size-timeline-company: 1.625rem;   /* 26px */
+  --font-size-timeline-bullet: 1.25rem;     /* 20px */
 }
 
 :root {
@@ -224,5 +229,19 @@ body,
   .w-12.bg-gray-900,
   hr.bg-gray-900 {
     background-color: var(--color-lg-500) !important;
+  }
+}
+
+@layer utilities {
+  .text-timeline-date {
+    font-size: var(--font-size-timeline-date);
+  }
+
+  .text-timeline-company {
+    font-size: var(--font-size-timeline-company);
+  }
+
+  .text-timeline-bullet {
+    font-size: var(--font-size-timeline-bullet);
   }
 }
